@@ -93,8 +93,9 @@ class Users extends Component
         if ($user) {
             $this->alertMessage('تم تسجيل البيانات بنجاح', 'success');
             $this->dispatch('process-has-been-done');
-            $this->reset();
-            return true;
+            return redirect()->to(request()->header('Referer'));
+            // $this->reset();
+            // return true;
         }
 
         $this->alertMessage('حدث خطأ اثناء تسجيل بياناتك', 'error');
@@ -132,8 +133,9 @@ class Users extends Component
         if ($user) {
             $this->alertMessage('تم تحديث البيانات بنجاح', 'success');
             $this->dispatch('process-has-been-done');
+            return redirect()->to(request()->header('Referer'));
             // $this->reset();
-            return true;
+            // return true;
         }
 
         $this->alertMessage('حدث خطأ اثناء تسجيل بياناتك', 'error');

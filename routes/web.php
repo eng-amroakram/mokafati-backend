@@ -8,6 +8,11 @@ use App\Livewire\Panel\Stores;
 use App\Livewire\Panel\Users;
 use Illuminate\Support\Facades\Route;
 
+
+Route::get('/', function () {
+    return redirect()->route('admin.login');
+});
+
 Route::as('admin.')->prefix('admin')->middleware(['web'])->group(function () {
 
     Route::prefix('panel')
