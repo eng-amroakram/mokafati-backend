@@ -84,14 +84,14 @@ class Users extends Component
 
         if (count($errors)) {
             $this->dispatch('create-errors', $errors);
-            $this->alertMessage('يرجى التأكد من إدخال البيانات', 'error');
+            // $this->alertMessage('يرجى التأكد من إدخال البيانات', 'error');
             return false;
         }
 
         $user = $service->store($data);
 
         if ($user) {
-            $this->alertMessage('تم تسجيل البيانات بنجاح', 'success');
+            // $this->alertMessage('تم تسجيل البيانات بنجاح', 'success');
             $this->dispatch('process-has-been-done');
             return redirect()->to(request()->header('Referer'));
             // $this->reset();
@@ -124,14 +124,14 @@ class Users extends Component
 
         if (count($errors)) {
             $this->dispatch('create-errors', $errors);
-            $this->alertMessage('يرجى التأكد من إدخال البيانات', 'error');
+            // $this->alertMessage('يرجى التأكد من إدخال البيانات', 'error');
             return false;
         }
 
         $user = $service->update($data, $this->model_id);
 
         if ($user) {
-            $this->alertMessage('تم تحديث البيانات بنجاح', 'success');
+            // $this->alertMessage('تم تحديث البيانات بنجاح', 'success');
             $this->dispatch('process-has-been-done');
             return redirect()->to(request()->header('Referer'));
             // $this->reset();
