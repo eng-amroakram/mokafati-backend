@@ -13,13 +13,13 @@ return new class extends Migration
     {
         Schema::create('packages', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('title');
             $table->float('price');
             $table->float('cash_back');
             $table->integer('rewards');
             $table->float('minimum_purchase');
             $table->string('bonus');
-            $table->string('validity_period');
+            $table->string('validity_period')->nullable();
             $table->timestamps();
         });
     }

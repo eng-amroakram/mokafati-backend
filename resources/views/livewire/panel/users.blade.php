@@ -2,7 +2,7 @@
     <div class="p-4 mb-4">
 
         <div class="row mb-4" wire:ignore>
-            @livewire('panel.page-header', ['title' => 'المستخدمين', 'label' => 'مستخدم', 'model' => false, 'user' => false, 'perm' => false])
+            @livewire('panel.page-header', ['title' => 'المستخدمين', 'label' => 'مستخدم', 'model' => false, 'user' => false, 'perm' => true])
         </div>
 
         <!-- Data Tables -->
@@ -22,7 +22,7 @@
         </div>
 
         <div class="table-responsive-md text-center">
-            <div class="datatable-loader bg-light" style="height: 8px;" wire:loading>
+            <div class="datatable-loader bg-light" style="height: 8px;" wire:loading wire:target='search'>
                 <span class="datatable-loader-inner"><span class="datatable-progress bg-primary"></span></span>
             </div>
             <table class="table table-bordered text-center" style="margin-bottom: 0rem;">
@@ -43,8 +43,10 @@
                             <td>{{ $user->name }}</td>
                             <td>{{ $user->email }}</td>
                             <td>{{ $user->phone }}</td>
-                            <td>{{ $user->role }}</td>
-                            <x-actions delete="delete_user" edit="edit_user" :show="true" :link="'#'"
+                            <td>
+                                <span class='{{ badge($user->role) }}'>{{ ucfirst($user->role) }}</span>
+                            </td>
+                            <x-actions delete="delete_user" edit="edit_user" :show="false" :link="'#'"
                                 :id="$user->id"></x-actions>
                         </tr>
 
@@ -84,9 +86,9 @@
         <!-- Table Pagination -->
     </div>
 
-    {{-- <div class="modal fade" id="user-modal" tabindex="-1" data-mdb-backdrop="static" data-mdb-keyboard="false"
-        aria-labelledby="Creator" aria-hidden="true" wire:ignore>
-        <div class="modal-dialog modal-lg cascading-modal" style="margin-top: 4%">
+    <div class="modal fade" id="user-modal" tabindex="-1" data-mdb-backdrop="static" data-mdb-keyboard="false"
+        aria-labelledby="Creator" aria-hidden="true" wire:ignore wire:ignore.self>
+        <div class="modal-dialog modal-lg cascading-modal" style="margin-top: 5%">
             <div class="modal-content">
                 <div class="modal-c-tabs">
 
@@ -95,12 +97,12 @@
                     <ul class="nav md-tabs nav-tabs" id="create-new-user" role="tablist"
                         style="background-color: #303030;">
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link active" id="create-new-user-tab-1" href="#create-new-user-tabs-1"
+                            <a class="nav-link active fs-6" id="create-new-user-tab-1" href="#create-new-user-tabs-1"
                                 role="tab" aria-controls="create-new-user-tabs-1" aria-selected="true"
                                 data-mdb-toggle="pill">
                                 <i class="fas fa-circle-info me-1"></i>
                                 <strong>
-                                    بيانات الموظف
+                                    بيانات المستخدم
                                 </strong>
                             </a>
                         </li>
@@ -117,25 +119,25 @@
                                 <div class="row mb-3">
 
                                     <div class="col-md-6">
-                                        <label class="form-label" for="forName"><strong>اسم الموظف</strong></label>
+                                        <label class="form-label" for="forName"><strong>اسم المستخدم</strong></label>
                                         <div class="input-group">
                                             <span class="input-group-text">
                                                 <i class="far fa-user"></i>
                                             </span>
                                             <input type="text" wire:model.defer="name" maxlength="50"
-                                                class="form-control" placeholder="ادخل اسم الموظف" />
+                                                class="form-control" placeholder="ادخل اسم المستخدم" />
                                         </div>
                                         <div class="form-helper text-danger name-validation reset-validation"></div>
                                     </div>
 
                                     <div class="col-md-6">
-                                        <label class="form-label" for="forName"><strong>الرقم الوظيفي</strong></label>
+                                        <label class="form-label" for="forEmail"><strong>الايميل</strong></label>
                                         <div class="input-group">
                                             <span class="input-group-text"><i class="far fa-user"></i></span>
-                                            <input type="text" wire:model.defer="job_number" maxlength="15"
-                                                class="form-control" placeholder="الرقم الوظيفي" />
+                                            <input type="text" dir="ltr" wire:model.defer="email"
+                                                maxlength="50" class="form-control" placeholder="Email" />
                                         </div>
-                                        <div class="form-helper text-danger job_number-validation reset-validation">
+                                        <div class="form-helper text-danger email-validation reset-validation">
                                         </div>
                                     </div>
 
@@ -144,27 +146,56 @@
                                 <div class="row mb-3">
 
                                     <div class="col-md-6">
-                                        <label class="form-label" for="forName"><strong>المسمى
-                                                الوظيفي</strong></label>
+                                        <label class="form-label" for="forUsername"><strong>معرف
+                                                المستخدم</strong></label>
                                         <div class="input-group">
+
+                                            <input type="text" dir="ltr" wire:model.defer="username"
+                                                maxlength="15" class="form-control" placeholder="useName" />
                                             <span class="input-group-text">
-                                                <i class="far fa-user"></i>
+                                                <i class="far fa-at"></i>
                                             </span>
-                                            <input type="text" wire:model.defer="job_title" maxlength="30"
-                                                class="form-control" placeholder="ادخل المسمى الوظيفي" />
                                         </div>
-                                        <div class="form-helper text-danger job_title-validation reset-validation">
+                                        <div class="form-helper text-danger username-validation reset-validation">
                                         </div>
                                     </div>
 
                                     <div class="col-md-6">
-                                        <label class="form-label" for="forName"><strong>رقم الهوية</strong></label>
+                                        <label class="form-label" for="forPhone"><strong>رقم الهاتف</strong></label>
                                         <div class="input-group">
-                                            <span class="input-group-text"><i class="far fa-user"></i></span>
-                                            <input type="name" wire:model.defer="id_number" maxlength="15"
-                                                class="form-control" placeholder="رقم الهوية" />
+                                            <input type="text" dir="ltr" wire:model.defer="phone"
+                                                maxlength="9" class="form-control" placeholder="5xxx" />
+                                            <span class="input-group-text"
+                                                style="padding-top: 0; padding-bottom:0;">966+</span>
                                         </div>
-                                        <div class="form-helper text-danger id_number-validation reset-validation">
+                                        <div class="form-helper text-danger phone-validation reset-validation">
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="row mb-3">
+
+                                    <div class="col-md-6">
+                                        <label class="form-label" for="forAddress"><strong>العنوان</strong></label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">
+                                                <i class="far fa-user"></i>
+                                            </span>
+                                            <input type="text" wire:model.defer="address" maxlength="50"
+                                                class="form-control" placeholder="العنوان" />
+                                        </div>
+                                        <div class="form-helper text-danger address-validation reset-validation">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label" for="forType"><strong>نوع المستخدم</strong></label>
+                                        <select class="select" wire:model.defer="role">
+                                            <option value="user">مستخدم عادي</option>
+                                            <option value="admin">إداري</option>
+                                        </select>
+                                        <div class="form-helper text-danger role-validation reset-validation">
                                         </div>
                                     </div>
 
@@ -199,12 +230,19 @@
                                     إغلاق
                                 </button>
 
-                                <button type="button" class="btn bg-blue-color nextCreator">السابق</button>
-                                <button type="button" class="btn text-white green-color addUserButton"
-                                    wire:click='addUser()'>حفظ</button>
-                                <button type="button" class="btn text-white green-color editUserButton"
-                                    wire:click='editUser()'>تحديث</button>
-                                <button type="button" class="btn bg-blue-color nextCreator">التالي</button>
+                                {{-- <button type="button" class="btn bg-blue-color nextCreator">السابق</button> --}}
+                                <button type="button" class="btn text-white blue-color addUserButton fw-bold"
+                                    wire:click='addUser()'>
+                                    <span class="spinner-border spinner-border-sm me-2" role="status"
+                                        aria-hidden="true" wire:loading wire:target='addUser'></span>
+                                    حفظ</button>
+
+                                <button type="button" class="btn text-white blue-color editUserButton fw-bold"
+                                    wire:click='updateUser()'>
+                                    <span class="spinner-border spinner-border-sm me-2" role="status"
+                                        aria-hidden="true" wire:loading wire:target='updateUser'></span>
+                                    تحديث</button>
+                                {{-- <button type="button" class="btn bg-blue-color nextCreator">التالي</button> --}}
 
                             </div>
                         </div>
@@ -214,7 +252,7 @@
             </div>
         </div>
     </div>
-     --}}
+
 </div>
 
 
@@ -240,6 +278,7 @@
                 $("#user-modal").modal('hide');
                 $addUserButton.show();
                 $editUserButton.hide();
+                console.log("Yes");
             });
 
             Livewire.on("create-errors", function(errors) {

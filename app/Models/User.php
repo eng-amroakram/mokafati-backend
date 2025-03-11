@@ -90,10 +90,10 @@ class User extends Authenticatable
     {
         return [
             'name' => ['required'],
-            'email' => ['required', 'unique:users,email'],
-            'phone' => ['required', 'unique:users,phone'],
+            'email' => ['required', 'unique:users,email,' . "$id," . "id"],
+            'phone' => ['required', 'unique:users,phone,' . "$id," . "id"],
             'address' => ['string'],
-            'username' => ['required', 'unique:users,username'],
+            'username' => ['required', 'unique:users,username,' . "$id," . "id", 'max:15'],
             'role' => ['required', 'in:admin,user'],
             'password' => ['required']
         ];
@@ -108,7 +108,7 @@ class User extends Authenticatable
             'phone.required' => 'هذا الحقل مطلوب',
             'phone.unique' => 'رقم الهاتف موجود مسبقا',
             'username.required' => 'هذا الحقل مطلوب',
-            'username.required' => 'هذا الاسم مستخدم مسبقا',
+            'username.unique' => 'هذا الاسم مستخدم مسبقا',
             'password.required' => 'هذا الحقل مطلوب',
         ];
     }

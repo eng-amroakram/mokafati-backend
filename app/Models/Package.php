@@ -2,13 +2,16 @@
 
 namespace App\Models;
 
+use App\Traits\ModelHelper;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class Package extends Model
 {
+    use ModelHelper;
+
     protected $fillable = [
-        'name',
+        'title',
         'price',
         'cash_back',
         'rewards',
@@ -21,7 +24,7 @@ class Package extends Model
     {
         return $query->select([
             'id',
-            'name',
+            'title',
             'price',
             'cash_back',
             'rewards',
@@ -39,14 +42,14 @@ class Package extends Model
 
         $builder->when($filters['search'] != '', function ($query) use ($filters) {
             $query
-                ->where('name', 'like', '%' . $filters['search'] . '%');
+                ->where('title', 'like', '%' . $filters['search'] . '%');
         });
     }
 
     public function scopeGetRules(Builder $builder, $id = "")
     {
         return [
-            'name' => ['required'],
+            'title' => ['required'],
             'price' => ['required',],
             'cash_back' => ['required',],
             'rewards' => ['required'],
@@ -59,7 +62,7 @@ class Package extends Model
     public function scopeGetMessages()
     {
         return [
-            'name.required' => 'هذا الحقل مطلوب',
+            'title.required' => 'هذا الحقل مطلوب',
             'price.required' => 'هذا الحقل مطلوب',
             'cash_back.required' => 'هذا الحقل مطلوب',
             'rewards.required' => 'هذا الحقل مطلوب',

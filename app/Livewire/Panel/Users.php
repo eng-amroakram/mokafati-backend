@@ -6,6 +6,7 @@ use App\Http\Controllers\Services\Services;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -31,7 +32,8 @@ class Users extends Component
     public $email = "";
     public $phone = "";
     public $address = "";
-    public $role = "";
+    public $username = "";
+    public $role = "user";
     public $password = "";
     public $model_id = "";
 
@@ -58,7 +60,7 @@ class Users extends Component
     {
         $service = $this->setService();
         $message = $service->delete($id);
-        $this->alertMessage($message, 'success');
+        $this->alertMessage("تم الحذف بنجاح", 'success');
     }
 
     public function addUser()
@@ -67,11 +69,12 @@ class Users extends Component
 
         $data = [
             "name" => $this->name,
-            "email" => $this->job_number,
-            "phone" => $this->job_title,
-            "address" => $this->id_number,
-            'role' => 'user',
-            "password" => Hash::make($this->password),
+            "email" => $this->email,
+            "phone" => $this->phone,
+            "address" => $this->address,
+            "username" => $this->username,
+            'role' => $this->role,
+            "password" =>  $this->password ? Hash::make($this->password) : "",
         ];
 
         $rules = $service->rules();
@@ -104,13 +107,15 @@ class Users extends Component
 
         $data = [
             "name" => $this->name,
-            "email" => $this->job_number,
-            "phone" => $this->job_title,
-            "address" => $this->id_number,
+            "email" => $this->email,
+            "phone" => $this->phone,
+            "address" => $this->address,
+            "username" => $this->username,
+            "role" => $this->role,
             "password" => $this->password,
         ];
 
-        $rules = $service->rules();
+        $rules = $service->rules($this->model_id);
         $messages = $service->messages();
         unset($rules['password']);
         $validator = Validator::make($data, $rules, $messages);
@@ -125,9 +130,9 @@ class Users extends Component
         $user = $service->update($data, $this->model_id);
 
         if ($user) {
-            $this->alertMessage('تم تسجيل البيانات بنجاح', 'success');
+            $this->alertMessage('تم تحديث البيانات بنجاح', 'success');
             $this->dispatch('process-has-been-done');
-            $this->reset();
+            // $this->reset();
             return true;
         }
 
@@ -135,15 +140,27 @@ class Users extends Component
         return false;
     }
 
-    public function alertMessage($message, $type)
+    public function alertMessage($message, $type = "success")
     {
-        $this->alert($type, '', [
-            'toast' => true,
-            'position' => 'top-start',
-            'timer' => 3000,
-            'text' => $message,
-            'timerProgressBar' => true,
-        ]);
+        if ($type == "success") {
+            LivewireAlert::title("العملية نجحت")
+                ->text($message)
+                ->success()
+                ->toast()
+                ->position('top-start')
+                ->timer(3000)
+                ->show();
+        }
+
+        if ($type == "error") {
+            LivewireAlert::title("العملية فشلت")
+                ->text($message)
+                ->error()
+                ->toast()
+                ->position('top-start')
+                ->timer(3000)
+                ->show();
+        }
     }
 
     public function openModal($id)
@@ -151,8 +168,9 @@ class Users extends Component
         $user = User::where('id', $id)->first();
         $this->model_id = $id;
         $this->name = $user->name;
-        $this->email = $user->job_number;
-        $this->phone = $user->job_title;
-        $this->address = $user->id_number;
+        $this->email = $user->email;
+        $this->phone = $user->phone;
+        $this->username = $user->username;
+        $this->address = $user->address;
     }
 }
