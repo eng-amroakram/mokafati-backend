@@ -1,5 +1,5 @@
 <!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-dark "style="background: linear-gradient(45deg, #5299FF, #B2659D);">
     <!-- Container wrapper -->
     <div class="container">
         <!-- Toggle button -->

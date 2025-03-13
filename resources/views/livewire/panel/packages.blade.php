@@ -31,8 +31,8 @@
                         <th class="th-sm"><strong>ID</strong></th>
                         <th data-mdb-sort="true" class="th-sm"><strong>الاسم</strong></th>
                         <th data-mdb-sort="false" class="th-sm"><strong>سعرالباقة</strong></th>
-                        <th data-mdb-sort="false" class="th-sm"><strong>الكاش باك</strong></th>
-                        <th data-mdb-sort="false" class="th-sm"><strong>قمية المكافئة</strong></th>
+                        <th data-mdb-sort="false" class="th-sm"><strong>نسبة الكاش باك</strong></th>
+                        <th data-mdb-sort="false" class="th-sm"><strong>عدد المكافئات</strong></th>
                         <th data-mdb-sort="false" class="th-sm"><strong>الحد الادنى للشراء</strong></th>
                         <th data-mdb-sort="false" class="th-sm"><strong>البونس</strong></th>
                         <th data-mdb-sort="false" class="th-sm"><strong>مدة صلاحية الباقة</strong></th>
@@ -44,14 +44,13 @@
                         <tr>
                             <td>{{ $package->id }}</td>
                             <td>{{ $package->title }}</td>
-                            <td>{{ $package->price }}</td>
-                            <td>{{ $package->cash_back }}</td>
-                            <td>{{ $package->rewards }}</td>
-                            <td>{{ $package->minimum_purchase }}</td>
+                            <td>{{ $package->price }} ريال</td>
+                            <td>{{ $package->cash_back }} %</td>
+                            <td>{{ $package->rewards }} مكافئة</td>
+                            <td>{{ $package->minimum_purchase }} ريال</td>
                             <td>{{ $package->bonus }}</td>
                             <td>
-                                <span class='{{ badge('employee') }}' style="font-size: 14px;">حتى نفاذ قيمة
-                                    المكافئة</span>
+                                <span class='{{ badge('employee') }}'>حتى نفاذ عدد المكافئات</span>
                             </td>
                             <x-actions delete="delete_package" edit="edit_package" :show="false" :link="'#'"
                                 :id="$package->id"></x-actions>
@@ -126,7 +125,7 @@
                                 <div class="row mb-3">
 
                                     <div class="col-md-6">
-                                        <label class="form-label" for="forTitle"><strong>عنوان الباقة</strong></label>
+                                        <label class="form-label" for="forTitle"><strong>اسم الباقة</strong></label>
                                         <div class="input-group">
                                             <span class="input-group-text">
                                                 <i class="fas fa-heading"></i>
@@ -145,6 +144,10 @@
                                             </span>
                                             <input type="number" wire:model.defer="price" class="form-control"
                                                 max="5000" placeholder="سعر الباقة" />
+                                            <span class="input-group-text fw-bold"
+                                                style="padding-top:0px; padding-bottom:0px; ">
+                                                ريال
+                                            </span>
                                         </div>
                                         <div class="form-helper text-danger price-validation reset-validation">
                                         </div>
@@ -155,27 +158,36 @@
                                 <div class="row mb-3">
 
                                     <div class="col-md-6">
-                                        <label class="form-label" for="forName"><strong>الكاش باك</strong></label>
+                                        <label class="form-label" for="forName"><strong>نسبة الكاش
+                                                باك</strong></label>
                                         <div class="input-group">
                                             <span class="input-group-text">
                                                 <i class="fas fa-money-bill"></i>
                                             </span>
                                             <input type="number" wire:model.defer="cash_back" max="2000"
                                                 class="form-control" placeholder="ادخل الكاش باك" />
+                                            <span class="input-group-text fw-bold"
+                                                style="padding-top:0px; padding-bottom:0px;">
+                                                %
+                                            </span>
                                         </div>
                                         <div class="form-helper text-danger cash_back-validation reset-validation">
                                         </div>
                                     </div>
 
                                     <div class="col-md-6">
-                                        <label class="form-label" for="forName"><strong>قيمة
-                                                المكافئة</strong></label>
+                                        <label class="form-label" for="forName"><strong>عدد
+                                                المكافئات</strong></label>
                                         <div class="input-group">
                                             <span class="input-group-text">
                                                 <i class="fas fa-hand-holding-heart"></i>
                                             </span>
                                             <input type="number" wire:model.defer="rewards" max="5000"
-                                                class="form-control" placeholder="قيمة المكافئة" />
+                                                class="form-control" placeholder="عدد  المكافئات" />
+                                            <span class="input-group-text fw-bold"
+                                                style="padding-top:0px; padding-bottom:0px;">
+                                                مكافئة
+                                            </span>
                                         </div>
                                         <div class="form-helper text-danger rewards-validation reset-validation">
                                         </div>
@@ -195,6 +207,10 @@
                                             </span>
                                             <input type="number" wire:model.defer="minimum_purchase" max="2000"
                                                 class="form-control" placeholder="ادخل الحد الادنى للشراء" />
+                                            <span class="input-group-text fw-bold"
+                                                style="padding-top:0px; padding-bottom:0px;">
+                                                ريال
+                                            </span>
                                         </div>
                                         <div
                                             class="form-helper text-danger minimum_purchase-validation reset-validation">
@@ -234,26 +250,24 @@
                                         </div>
                                     </div>
                                 </div>
-
-
-
-
                             </div>
 
                             <div class="modal-footer">
 
-                                <button type="button" class="btn bg-blue-color" data-mdb-dismiss="modal">
+                                <button type="button" class="btn bg-blue-color closePackageButton"
+                                    data-mdb-dismiss="modal">
                                     إغلاق
                                 </button>
 
                                 {{-- <button type="button" class="btn bg-blue-color nextCreator">السابق</button> --}}
-                                <button type="button" class="btn text-white blue-color addPackageButton fw-bold"
+                                <button type="button" class="btn text-white icon-background addPackageButton fw-bold"
                                     wire:click='addPackage()'>
                                     <span class="spinner-border spinner-border-sm me-2" role="status"
                                         aria-hidden="true" wire:loading wire:target='addPackage'></span>
                                     حفظ</button>
 
-                                <button type="button" class="btn text-white blue-color editPackageButton fw-bold"
+                                <button type="button"
+                                    class="btn text-white icon-background editPackageButton fw-bold"
                                     wire:click='updatePackage()'>
                                     <span class="spinner-border spinner-border-sm me-2" role="status"
                                         aria-hidden="true" wire:loading wire:target='updatePackage'></span>
@@ -278,8 +292,10 @@
         $(document).ready(function() {
 
             const $editButton = $(".editButton");
+            const $addButton = $(".addButton");
             const $addPackageButton = $(".addPackageButton");
             const $editPackageButton = $(".editPackageButton");
+            const $closePackageButton = $(".closePackageButton");
 
             $addPackageButton.show();
             $editPackageButton.hide();
@@ -289,6 +305,18 @@
                 $editPackageButton.show();
             });
 
+            $addButton.on('click', function() {
+                $addPackageButton.show();
+                $editPackageButton.hide();
+                @this.dispatch("reset-properties");
+                $(".reset-validation").text("");
+            });
+
+            $closePackageButton.on('click', function() {
+                $addPackageButton.show();
+                $editPackageButton.hide();
+                $(".reset-validation").text("");
+            });
 
             Livewire.on("process-has-been-done", function() {
                 $(".reset-validation").text("");
@@ -296,6 +324,12 @@
                 $addPackageButton.show();
                 $editPackageButton.hide();
             });
+
+            // Livewire.on("singleSelectInput", function(selected) {
+            //     const singleSelect = document.querySelector("#user-role");
+            //     const singleSelectInstance = mdb.Select.getInstance(singleSelect);
+            //     singleSelectInstance.setValue(selected[0]);
+            // });
 
             Livewire.on("create-errors", function(errors) {
                 $(".reset-validation").text("");

@@ -21,7 +21,7 @@
 
             @if ($perm)
                 <div class="d-flex align-items-center pe-3">
-                    <a class="text-dark"  data-mdb-toggle="modal" data-mdb-target="{{ '#user-modal' }}"
+                    <a class="text-dark addButton"  data-mdb-toggle="modal" data-mdb-target="{{ '#user-modal' }}"
                         href="{{ '#user-modal' }}">
                         <i class="far fa-square-plus me-2"></i>
                         <span>إضافة {{ $label }}</span>

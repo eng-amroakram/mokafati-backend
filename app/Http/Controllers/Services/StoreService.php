@@ -40,7 +40,7 @@ class StoreService extends Controller
 
     public function store($data)
     {
-        return Store::store($data);
+        return Store::storeModel($data);
     }
 
     public function update($data, $id)

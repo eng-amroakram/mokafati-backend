@@ -44,7 +44,8 @@
                             <td>{{ $user->email }}</td>
                             <td>{{ $user->phone }}</td>
                             <td>
-                                <span class='{{ badge($user->role) }}'>{{ ucfirst($user->role) }}</span>
+                                <span
+                                    class='{{ badge(optional($user->roles->first())->name ?? '') }}'>{{ ucwords(str_replace('_', ' ', optional($user->roles->first())->name ?? '')) }}</span>
                             </td>
                             <x-actions delete="delete_user" edit="edit_user" :show="false" :link="'#'"
                                 :id="$user->id"></x-actions>
@@ -87,15 +88,14 @@
     </div>
 
     <div class="modal fade" id="user-modal" tabindex="-1" data-mdb-backdrop="static" data-mdb-keyboard="false"
-        aria-labelledby="Creator" aria-hidden="true" wire:ignore wire:ignore.self>
+        aria-labelledby="Creator" aria-hidden="true" wire:ignore>
         <div class="modal-dialog modal-lg cascading-modal" style="margin-top: 5%">
             <div class="modal-content">
                 <div class="modal-c-tabs">
 
 
                     <!-- Tabs navs -->
-                    <ul class="nav md-tabs nav-tabs" id="create-new-user" role="tablist"
-                        style="background-color: #303030;">
+                    <ul class="nav md-tabs nav-tabs icon-background" id="create-new-user" role="tablist">
                         <li class="nav-item" role="presentation">
                             <a class="nav-link active fs-6" id="create-new-user-tab-1" href="#create-new-user-tabs-1"
                                 role="tab" aria-controls="create-new-user-tabs-1" aria-selected="true"
@@ -191,7 +191,7 @@
 
                                     <div class="col-md-6">
                                         <label class="form-label" for="forType"><strong>نوع المستخدم</strong></label>
-                                        <select class="select" wire:model.defer="role">
+                                        <select class="select" id="user-role" wire:model.defer="role">
                                             <option value="user">مستخدم عادي</option>
                                             <option value="admin">إداري</option>
                                         </select>
@@ -226,23 +226,23 @@
 
                             <div class="modal-footer">
 
-                                <button type="button" class="btn bg-blue-color" data-mdb-dismiss="modal">
+                                <button type="button" class="btn bg-blue-color closeUserButton"
+                                    data-mdb-dismiss="modal">
                                     إغلاق
                                 </button>
 
-                                {{-- <button type="button" class="btn bg-blue-color nextCreator">السابق</button> --}}
-                                <button type="button" class="btn text-white blue-color addUserButton fw-bold"
+                                <button type="button" class="btn text-white icon-background addUserButton fw-bold"
                                     wire:click='addUser()'>
+
                                     <span class="spinner-border spinner-border-sm me-2" role="status"
                                         aria-hidden="true" wire:loading wire:target='addUser'></span>
                                     حفظ</button>
 
-                                <button type="button" class="btn text-white blue-color editUserButton fw-bold"
+                                <button type="button" class="btn text-white icon-background editUserButton fw-bold"
                                     wire:click='updateUser()'>
                                     <span class="spinner-border spinner-border-sm me-2" role="status"
                                         aria-hidden="true" wire:loading wire:target='updateUser'></span>
                                     تحديث</button>
-                                {{-- <button type="button" class="btn bg-blue-color nextCreator">التالي</button> --}}
 
                             </div>
                         </div>
@@ -261,24 +261,47 @@
         $(document).ready(function() {
 
             const $editButton = $(".editButton");
+            const $addButton = $(".addButton");
             const $addUserButton = $(".addUserButton");
             const $editUserButton = $(".editUserButton");
+            const $closeUserButton = $(".closeUserButton");
+            const $formControl = $(".form-control");
 
             $addUserButton.show();
             $editUserButton.hide();
 
+            //Buttons Actions
             $editButton.on('click', function() {
                 $addUserButton.hide();
                 $editUserButton.show();
             });
 
+            $addButton.on('click', function() {
+                $addUserButton.show();
+                $editUserButton.hide();
+                $formControl.val("");
+                @this.dispatch("reset-properties");
+                $(".reset-validation").text("");
+            });
 
+            $closeUserButton.on('click', function() {
+                $addUserButton.show();
+                $editUserButton.hide();
+                $(".reset-validation").text("");
+            });
+
+            //On Livewire
             Livewire.on("process-has-been-done", function() {
                 $(".reset-validation").text("");
                 $("#user-modal").modal('hide');
                 $addUserButton.show();
                 $editUserButton.hide();
-                console.log("Yes");
+            });
+
+            Livewire.on("singleSelectInput", function(selected) {
+                const singleSelect = document.querySelector("#user-role");
+                const singleSelectInstance = mdb.Select.getInstance(singleSelect);
+                singleSelectInstance.setValue(selected[0]);
             });
 
             Livewire.on("create-errors", function(errors) {

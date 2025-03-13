@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="ar" dir="ltr">
 
 <head>
     <meta charset="UTF-8">
@@ -14,6 +14,51 @@
 
     {{-- CSS Styles --}}
     <link rel="stylesheet" href="{{ asset('panel/mdb-pro/css/core.min.css') }}">
+
+    {{-- Google Font --}}
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+        }
+
+        /* عناوين بارزة */
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-weight: 900;
+        }
+
+        /* تنسيق الجداول */
+        table {
+            font-size: 14px;
+            font-weight: 400;
+        }
+
+        /* تخصيص الخطوط للنصوص الإنجليزية فقط */
+        @font-face {
+            font-family: 'EnglishFont';
+            src: url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+        }
+
+        /* تحديد النصوص الإنجليزية */
+        *:not(i) {
+            /* استثناء الأيقونات */
+            font-family: 'Cairo', sans-serif;
+        }
+
+        :is(h1, h2, h3, h4, h5, h6, p, span, div, table):not(i) {
+            font-family: 'Cairo', sans-serif;
+        }
+
+        :is(h1, h2, h3, h4, h5, h6, p, span, div, table) :lang(en):not(i) {
+            font-family: 'Roboto', sans-serif;
+        }
+    </style>
 
     <style>
         .bg-image-vertical {

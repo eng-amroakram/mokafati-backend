@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html dir="rtl" lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html dir="rtl" lang="ar">
 
 <head>
     <meta charset="utf-8">
@@ -17,6 +17,65 @@
     <link rel="stylesheet" href="{{ asset('panel/mdb-pro/css/modals.css') }}">
     {{-- <link rel="stylesheet" href="{{ asset('panel/mdb-pro/css/lightbox.css') }}"> --}}
 
+    {{-- Google Font --}}
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #F4F6F9;
+            /* خلفية فاتحة مع تباين جيد */
+            color: #333333;
+            /* لون الخط الأساسي */
+        }
+
+        /* عناوين بارزة */
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-weight: 900;
+            color: #2C3E50;
+            /* لون العناوين */
+        }
+
+        a {
+            color: #5299FF;
+            /* لون الروابط مع تدرج متناسق مع sidebar */
+        }
+
+        table {
+            font-size: 14px;
+            font-weight: 400;
+            color: #333333;
+            /* خط الجداول */
+
+        }
+
+        /* تخصيص الخطوط للنصوص الإنجليزية فقط */
+        @font-face {
+            font-family: 'EnglishFont';
+            src: url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+        }
+
+        /* تحديد النصوص الإنجليزية */
+        *:not(i) {
+            /* استثناء الأيقونات */
+            font-family: 'Cairo', sans-serif;
+        }
+
+        :is(h1, h2, h3, h4, h5, h6, p, span, div, table):not(i) {
+            font-family: 'Cairo', sans-serif;
+        }
+
+        :is(h1, h2, h3, h4, h5, h6, p, span, div, table) :lang(en):not(i) {
+            font-family: 'Roboto', sans-serif;
+        }
+    </style>
+
+
     <style>
         .mdb-docs-layout {
             padding-right: 240px;
@@ -31,10 +90,14 @@
         .color-green {
             color: rgb(1, 161, 127);
         }
+
+        .icon-background {
+            background: linear-gradient(45deg, #6C7AE0, #A5A7D4);
+        }
     </style>
 
     @livewireStyles()
-    {{-- CDN  Livewire Alerts--}}
+    {{-- CDN  Livewire Alerts --}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     {{-- @vite(['resources/js/app.js']) --}}
 </head>

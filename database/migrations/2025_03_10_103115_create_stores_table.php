@@ -13,10 +13,11 @@ return new class extends Migration
     {
         Schema::create('stores', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('owner_id')->constrained('users')->cascadeOnDelete();
             $table->string('name');
             $table->string('commercial_registration');
             $table->string('tax_number');
+            $table->enum('status', ['active', 'inactive'])->default('active');
             $table->enum('type', ['cafe', 'restaurant', 'entertainment', 'health', 'beauty', 'tourism', 'other']);
             $table->string('invoice');
             $table->timestamps();

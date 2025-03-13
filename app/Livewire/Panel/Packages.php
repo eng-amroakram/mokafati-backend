@@ -7,6 +7,7 @@ use App\Models\Package;
 use Illuminate\Support\Facades\Validator;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -33,7 +34,7 @@ class Packages extends Component
     public $rewards = "";
     public $minimum_purchase = "";
     public $bonus = "";
-    public $validity_period = "حتى نفاذ قيمة المكافئة";
+    public $validity_period = "حتى نفاذ عدد المكافئات";
     public $model_id = "";
 
     private function setService()
@@ -170,5 +171,11 @@ class Packages extends Component
         $this->minimum_purchase = $package->minimum_purchase;
         $this->bonus = $package->bonus;
         // $this->validity_period = $package->validity_period;
+    }
+
+    #[On('reset-properties')]
+    public function empty()
+    {
+        $this->reset();
     }
 }

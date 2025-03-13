@@ -10,11 +10,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
+    use HasRoles;
     use ModelHelper;
 
     /**
@@ -30,7 +32,6 @@ class User extends Authenticatable
         'address',
         'status',
         'username',
-        'role'
     ];
 
     /**
@@ -64,7 +65,6 @@ class User extends Authenticatable
             'email',
             'phone',
             'address',
-            'role',
             'status',
             'username',
             'password',
@@ -94,7 +94,7 @@ class User extends Authenticatable
             'phone' => ['required', 'unique:users,phone,' . "$id," . "id"],
             'address' => ['string'],
             'username' => ['required', 'unique:users,username,' . "$id," . "id", 'max:15'],
-            'role' => ['required', 'in:admin,user'],
+            // 'role' => ['required', 'in:admin,user'],
             'password' => ['required']
         ];
     }
@@ -113,20 +113,15 @@ class User extends Authenticatable
         ];
     }
 
-    public function scopeStore(Builder $builder, array $data = [])
+    public function scopeStoreModel(Builder $builder, array $data = [])
     {
         $user = $builder->create($data);
-
-        if ($user) {
-            return true;
-        }
-
-        return false;
+        $user->syncRoles($data['role']);
+        return $user ? $user : false;
     }
 
     public function scopeUpdateModel(Builder $builder, $data, $id)
     {
-
         if ($data["password"]) {
             $data["password"] = Hash::make($data["password"]);
         } else {
@@ -134,6 +129,7 @@ class User extends Authenticatable
         }
 
         $user = $builder->find($id);
+        $user->syncRoles($data['role']);
 
         if ($user) {
             $user = $user->update($data);
@@ -141,5 +137,10 @@ class User extends Authenticatable
         }
 
         return false;
+    }
+
+    public function store()
+    {
+        return $this->hasOne(Store::class, 'owner_id');
     }
 }

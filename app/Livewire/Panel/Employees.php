@@ -3,7 +3,9 @@
 namespace App\Livewire\Panel;
 
 use App\Http\Controllers\Services\Services;
+use App\Models\Employee;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
@@ -11,13 +13,11 @@ use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
-use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 
-class Users extends Component
+class Employees extends Component
 {
     use WithPagination;
-    use WithFileUploads;
 
     protected $paginationTheme = 'bootstrap';
     protected $service = null;
@@ -30,30 +30,24 @@ class Users extends Component
     public $filters = [];
 
     public $name = "";
-    public $email = "";
-    public $phone = "";
-    public $address = "";
-    public $username = "";
-    public $role = "user";
-    public $password = "";
     public $model_id = "";
-
 
     private function setService()
     {
-        return Services::createInstance("UserService") ?? new Services();
+        return Services::createInstance("EmployeeService") ?? new Services();
     }
 
-    #[Title('لوحة التحكم - المستخدمين'), Layout('layouts.panel.app')]
+
+    #[Title('لوحة التحكم - الموظفين'), Layout('layouts.panel.app')]
     public function render()
     {
         $this->filters["search"] = $this->search;
 
         $service = $this->setService();
-        $users = $service->data($this->filters, $this->sort_field, $this->sort_direction, $this->pagination);
+        $employees = $service->data($this->filters, $this->sort_field, $this->sort_direction, $this->pagination);
 
-        return view('livewire.panel.users', [
-            'users' => $users
+        return view('livewire.panel.employees', [
+            'employees' => $employees
         ]);
     }
 
@@ -64,18 +58,15 @@ class Users extends Component
         $this->alertMessage("تم الحذف بنجاح", 'success');
     }
 
-    public function addUser()
+    public function addEmployee()
     {
+        $store_manager = User::where('id', Auth::id())->first();
+
         $service = $this->setService();
 
         $data = [
             "name" => $this->name,
-            "email" => $this->email,
-            "phone" => $this->phone,
-            "address" => $this->address,
-            "username" => $this->username,
-            'role' => $this->role,
-            "password" =>  $this->password ? Hash::make($this->password) : "",
+            "store_id" => $store_manager->store->id,
         ];
 
         $rules = $service->rules();
@@ -85,41 +76,31 @@ class Users extends Component
 
         if (count($errors)) {
             $this->dispatch('create-errors', $errors);
-            // $this->alertMessage('يرجى التأكد من إدخال البيانات', 'error');
             return false;
         }
 
         $user = $service->store($data);
 
         if ($user) {
-            // $this->alertMessage('تم تسجيل البيانات بنجاح', 'success');
             $this->dispatch('process-has-been-done');
             return redirect()->to(request()->header('Referer'));
-            // $this->reset();
-            // return true;
         }
 
         $this->alertMessage('حدث خطأ اثناء تسجيل بياناتك', 'error');
         return false;
     }
 
-    public function updateUser()
+    public function updateEmployee()
     {
         $service = $this->setService();
 
         $data = [
             "name" => $this->name,
-            "email" => $this->email,
-            "phone" => $this->phone,
-            "address" => $this->address,
-            "username" => $this->username,
-            "role" => $this->role,
-            "password" => $this->password,
         ];
 
         $rules = $service->rules($this->model_id);
         $messages = $service->messages();
-        unset($rules['password']);
+        $rules['store_id'] = [];
         $validator = Validator::make($data, $rules, $messages);
         $errors = array_map(fn($value) => $value[0], $validator->errors()->toArray());
 
@@ -164,15 +145,9 @@ class Users extends Component
 
     public function openModal($id)
     {
-        $user = User::where('id', $id)->first();
+        $employee = Employee::where('id', $id)->first();
         $this->model_id = $id;
-        $this->name = $user->name;
-        $this->email = $user->email;
-        $this->phone = $user->phone;
-        $this->username = $user->username;
-        $this->address = $user->address;
-        $this->role = $user->roles->first() ? $user->roles->first()->name : "";
-        $this->dispatch('singleSelectInput', $this->role);
+        $this->name = $employee->name;
     }
 
     #[On('reset-properties')]

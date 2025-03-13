@@ -72,7 +72,7 @@ class Package extends Model
         ];
     }
 
-    public function scopeStore(Builder $builder, array $data = [])
+    public function scopeStoreModel(Builder $builder, array $data = [])
     {
         $user = $builder->create($data);
 

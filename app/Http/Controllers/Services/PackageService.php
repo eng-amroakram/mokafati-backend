@@ -40,7 +40,7 @@ class PackageService extends Controller
 
     public function store($data)
     {
-        return Package::store($data);
+        return Package::storeModel($data);
     }
 
     public function update($data, $id)

@@ -2,32 +2,22 @@
 
 namespace App\Models;
 
+use App\Traits\ModelHelper;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
-class Store extends Model
+class Employee extends Model
 {
-    protected $fillable = [
-        'owner_id',
-        'name',
-        'commercial_registration',
-        'tax_number',
-        'type',
-        'status',
-        'invoice',
-    ];
+    use ModelHelper;
+    protected $fillable = ['name', 'status', 'store_id'];
 
     public function scopeData($query)
     {
         return $query->select([
             'id',
-            'owner_id',
             'name',
-            'commercial_registration',
-            'tax_number',
-            'type',
             'status',
-            'invoice',
+            'store_id',
         ]);
     }
 
@@ -46,36 +36,23 @@ class Store extends Model
     public function scopeGetRules(Builder $builder, $id = "")
     {
         return [
-            'owner_id' => ['required', 'exists:users,id'],
             'name' => ['required',],
-            'commercial_registration' => ['required',],
-            'tax_number' => ['required'],
-            'type' => ['required', 'in:cafe,restaurant,entertainment,health,beauty,tourism,other'],
-            'invoice' => ['required'],
+            'store_id' => ['required', 'exists:stores,id'],
         ];
     }
 
     public function scopeGetMessages()
     {
         return [
-            'owner_id.required' => 'هذا الحقل مطلوب',
             'name.required' => 'هذا الحقل مطلوب',
-            'commercial_registration.required' => 'هذا الحقل مطلوب',
-            'tax_number.required' => 'هذا الحقل مطلوب',
-            'type.required' => 'هذا الحقل مطلوب',
-            'invoice.required' => 'هذا الحقل مطلوب',
+            'store_id.required' => 'هذا الحقل مطلوب',
         ];
     }
 
     public function scopeStoreModel(Builder $builder, array $data = [])
     {
         $user = $builder->create($data);
-
-        if ($user) {
-            return true;
-        }
-
-        return false;
+        return $user ? $user : false;
     }
 
     public function scopeUpdateModel(Builder $builder, $data, $id)
@@ -86,17 +63,11 @@ class Store extends Model
             $user = $user->update($data);
             return true;
         }
-
         return false;
     }
 
-    public function owner()
+    public function store()
     {
-        return $this->belongsTo(User::class, 'owner_id');
-    }
-
-    public function employees()
-    {
-        return $this->hasMany(Employee::class, 'store_id');
+        return $this->belongsTo(Store::class);
     }
 }

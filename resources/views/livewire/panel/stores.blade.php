@@ -2,7 +2,7 @@
     <div class="p-4 mb-4">
 
         <div class="row mb-4" wire:ignore>
-            @livewire('panel.page-header', ['title' => 'المتاجر', 'label' => 'متجر', 'model' => false, 'user' => false, 'perm' => false])
+            @livewire('panel.page-header', ['title' => 'المتاجر', 'label' => 'متجر', 'model' => false, 'user' => false, 'perm' => true])
         </div>
 
         <!-- Data Tables -->
@@ -43,12 +43,17 @@
                         <tr>
                             <td>{{ $store->id }}</td>
                             <td>{{ $store->name }}</td>
-                            <td>{{ $store->user->name }}</td>
+                            <td>{{ $store->owner->name }}</td>
                             <td>{{ $store->commercial_registration }}</td>
                             <td>{{ $store->tax_number }}</td>
-                            <td>{{ $store->type }}</td>
+
+                            <td>
+                                <span
+                                    class='{{ storeTypeBadge($store->type)['badge'] }}'>{{ storeTypeBadge($store->type)['name'] }}</span>
+                            </td>
+
                             <td>Image</td>
-                            <x-actions delete="delete_store" edit="edit_store" :show="true" :link="'#'"
+                            <x-actions :delete="false" edit="edit_store" :show="false" :link="'#'"
                                 :id="$store->id"></x-actions>
                         </tr>
 
@@ -88,23 +93,23 @@
         <!-- Table Pagination -->
     </div>
 
-    {{-- <div class="modal fade" id="user-modal" tabindex="-1" data-mdb-backdrop="static" data-mdb-keyboard="false"
+    <div class="modal fade" id="user-modal" tabindex="-1" data-mdb-backdrop="static" data-mdb-keyboard="false"
         aria-labelledby="Creator" aria-hidden="true" wire:ignore>
-        <div class="modal-dialog modal-lg cascading-modal" style="margin-top: 4%">
+        <div class="modal-dialog modal-lg cascading-modal" style="margin-top: 5%">
             <div class="modal-content">
                 <div class="modal-c-tabs">
 
 
                     <!-- Tabs navs -->
-                    <ul class="nav md-tabs nav-tabs" id="create-new-user" role="tablist"
-                        style="background-color: #303030;">
+                    <ul class="nav md-tabs nav-tabs icon-background" id="create-new-user" role="tablist"
+                        >
                         <li class="nav-item" role="presentation">
-                            <a class="nav-link active" id="create-new-user-tab-1" href="#create-new-user-tabs-1"
+                            <a class="nav-link active fs-6" id="create-new-user-tab-1" href="#create-new-user-tabs-1"
                                 role="tab" aria-controls="create-new-user-tabs-1" aria-selected="true"
                                 data-mdb-toggle="pill">
                                 <i class="fas fa-circle-info me-1"></i>
                                 <strong>
-                                    بيانات الموظف
+                                    بيانات المتجر
                                 </strong>
                             </a>
                         </li>
@@ -121,25 +126,27 @@
                                 <div class="row mb-3">
 
                                     <div class="col-md-6">
-                                        <label class="form-label" for="forName"><strong>اسم الموظف</strong></label>
+                                        <label class="form-label" for="forName"><strong>اسم المتجر</strong></label>
                                         <div class="input-group">
                                             <span class="input-group-text">
-                                                <i class="far fa-user"></i>
+                                                <i class="fas fa-file-signature"></i>
                                             </span>
                                             <input type="text" wire:model.defer="name" maxlength="50"
-                                                class="form-control" placeholder="ادخل اسم الموظف" />
+                                                class="form-control" placeholder="ادخل اسم المتجر" />
                                         </div>
                                         <div class="form-helper text-danger name-validation reset-validation"></div>
                                     </div>
 
                                     <div class="col-md-6">
-                                        <label class="form-label" for="forName"><strong>الرقم الوظيفي</strong></label>
-                                        <div class="input-group">
-                                            <span class="input-group-text"><i class="far fa-user"></i></span>
-                                            <input type="text" wire:model.defer="job_number" maxlength="15"
-                                                class="form-control" placeholder="الرقم الوظيفي" />
-                                        </div>
-                                        <div class="form-helper text-danger job_number-validation reset-validation">
+                                        <label class="form-label" for="forOwnerID"><strong>مالك
+                                                المتجر</strong></label>
+                                        <select class="select" id="owner-store" wire:model.defer="owner_id">
+                                            <option value=""></option>
+                                            @foreach (users() as $user)
+                                                <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        <div class="form-helper text-danger owner_id-validation reset-validation">
                                         </div>
                                     </div>
 
@@ -148,67 +155,87 @@
                                 <div class="row mb-3">
 
                                     <div class="col-md-6">
-                                        <label class="form-label" for="forName"><strong>المسمى
-                                                الوظيفي</strong></label>
-                                        <div class="input-group">
-                                            <span class="input-group-text">
-                                                <i class="far fa-user"></i>
-                                            </span>
-                                            <input type="text" wire:model.defer="job_title" maxlength="30"
-                                                class="form-control" placeholder="ادخل المسمى الوظيفي" />
-                                        </div>
-                                        <div class="form-helper text-danger job_title-validation reset-validation">
+                                        <label class="form-label" for="forStoreType"><strong>نوع
+                                                المتجر</strong></label>
+                                        <select class="select" id="store-type" wire:model.defer="type">
+                                            @foreach (store_types() as $key => $value)
+                                                <option value="{{ $key }}">{{ $value }}</option>
+                                            @endforeach
+                                        </select>
+                                        <div class="form-helper text-danger type-validation reset-validation">
                                         </div>
                                     </div>
 
                                     <div class="col-md-6">
-                                        <label class="form-label" for="forName"><strong>رقم الهوية</strong></label>
+                                        <label class="form-label" for="forCommercialRegistration"><strong>رقم السجل
+                                                التجاري</strong></label>
                                         <div class="input-group">
-                                            <span class="input-group-text"><i class="far fa-user"></i></span>
-                                            <input type="name" wire:model.defer="id_number" maxlength="15"
-                                                class="form-control" placeholder="رقم الهوية" />
+                                            <input type="text" dir="ltr"
+                                                wire:model.defer="commercial_registration" maxlength="14"
+                                                class="form-control" placeholder="5xxx" />
+                                            <span class="input-group-text">
+                                                <i class="fas fa-receipt"></i>
+                                            </span>
                                         </div>
-                                        <div class="form-helper text-danger id_number-validation reset-validation">
+                                        <div
+                                            class="form-helper text-danger commercial_registration-validation reset-validation">
                                         </div>
                                     </div>
 
                                 </div>
 
-                                <div class="row">
+                                <div class="row mb-3">
 
                                     <div class="col-md-6">
-
-                                        <label class="form-label" for="forPassword"><strong>كلمة
-                                                المرور</strong></label>
+                                        <label class="form-label" for="forTaxNumber"><strong>رقم
+                                                الضريبة</strong></label>
                                         <div class="input-group">
+                                            <input type="number" dir="ltr" wire:model.defer="tax_number"
+                                                class="form-control" placeholder="25" />
                                             <span class="input-group-text">
-                                                <i class="fas fa-key"></i>
+                                                <i class="fas fa-comment-dollar"></i>
                                             </span>
-
-                                            <input type="password" wire:model.defer="password" maxlength="25"
-                                                class="form-control" placeholder="ادخل كلمة المرور" />
-
                                         </div>
-                                        <div class="form-helper text-danger password-validation reset-validation">
+                                        <div class="form-helper text-danger tax_number-validation reset-validation">
                                         </div>
                                     </div>
 
+
+                                    <div class="col-md-6">
+                                        <label class="form-label" for="forInvoice"><strong>الفاتورة</strong></label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">
+                                                <i class="fas fa-file-invoice"></i>
+                                            </span>
+                                            <input type="text" wire:model.defer="invoice" maxlength="50"
+                                                class="form-control" placeholder="الفاتورة" />
+                                        </div>
+                                        <div class="form-helper text-danger invoice-validation reset-validation">
+                                        </div>
+                                    </div>
                                 </div>
 
                             </div>
 
                             <div class="modal-footer">
 
-                                <button type="button" class="btn bg-blue-color" data-mdb-dismiss="modal">
+                                <button type="button" class="btn bg-blue-color closeUserButton"
+                                    data-mdb-dismiss="modal">
                                     إغلاق
                                 </button>
 
-                                <button type="button" class="btn bg-blue-color nextCreator">السابق</button>
-                                <button type="button" class="btn text-white green-color addUserButton"
-                                    wire:click='addUser()'>حفظ</button>
-                                <button type="button" class="btn text-white green-color editUserButton"
-                                    wire:click='editUser()'>تحديث</button>
-                                <button type="button" class="btn bg-blue-color nextCreator">التالي</button>
+                                <button type="button" class="btn text-white icon-background addStoreButton fw-bold"
+                                    wire:click='addStore()'>
+
+                                    <span class="spinner-border spinner-border-sm me-2" role="status"
+                                        aria-hidden="true" wire:loading wire:target='addStore'></span>
+                                    حفظ</button>
+
+                                <button type="button" class="btn text-white icon-background editStoreButton fw-bold"
+                                    wire:click='updateStore()'>
+                                    <span class="spinner-border spinner-border-sm me-2" role="status"
+                                        aria-hidden="true" wire:loading wire:target='updateStore'></span>
+                                    تحديث</button>
 
                             </div>
                         </div>
@@ -218,7 +245,7 @@
             </div>
         </div>
     </div>
-     --}}
+
 </div>
 
 
@@ -227,23 +254,55 @@
         $(document).ready(function() {
 
             const $editButton = $(".editButton");
-            const $addUserButton = $(".addUserButton");
-            const $editUserButton = $(".editUserButton");
+            const $addButton = $(".addButton");
+            const $addStoreButton = $(".addStoreButton");
+            const $editStoreButton = $(".editStoreButton");
+            const $closeUserButton = $(".closeUserButton");
+            const $selectOwnerStore = document.getElementById("owner-store");
+            const $formControl = $(".form-control");
 
-            $addUserButton.show();
-            $editUserButton.hide();
+            $addStoreButton.show();
+            $editStoreButton.hide();
 
             $editButton.on('click', function() {
-                $addUserButton.hide();
-                $editUserButton.show();
+                $addStoreButton.hide();
+                $editStoreButton.show();
+                $selectOwnerStore.disabled = !$selectOwnerStore.disabled;
             });
 
+            $addButton.on('click', function() {
+                $addStoreButton.show();
+                $editStoreButton.hide();
+                $formControl.val("");
+                @this.dispatch("reset-properties");
+                $(".reset-validation").text("");
+            });
+
+            $closeUserButton.on('click', function() {
+                $addStoreButton.show();
+                $editStoreButton.hide();
+                $selectOwnerStore.disabled = false;
+                $(".reset-validation").text("");
+            });
 
             Livewire.on("process-has-been-done", function() {
                 $(".reset-validation").text("");
                 $("#user-modal").modal('hide');
-                $addUserButton.show();
-                $editUserButton.hide();
+                $addStoreButton.show();
+                $editStoreButton.hide();
+                $selectOwnerStore.disabled = false;
+            });
+
+            Livewire.on("singleSelectOwner", function(selected) {
+                const singleSelect = document.querySelector("#owner-store");
+                const singleSelectInstance = mdb.Select.getInstance(singleSelect);
+                singleSelectInstance.setValue(selected[0].toString());
+            });
+
+            Livewire.on("singleSelectType", function(selected) {
+                const singleSelect = document.querySelector("#store-type");
+                const singleSelectInstance = mdb.Select.getInstance(singleSelect);
+                singleSelectInstance.setValue(selected[0]);
             });
 
             Livewire.on("create-errors", function(errors) {

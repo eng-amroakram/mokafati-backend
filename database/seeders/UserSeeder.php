@@ -14,14 +14,36 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        User::create([
+        $admin = User::create([
             'name' => 'admin',
             'email' => 'admin@gmail.com',
             'password' => Hash::make('123456'),
-            'phone' => '0599916672',
+            'phone' => '0599916671',
             'username' => 'admin',
+            'status' => 'active',
             'address' => 'Palestine/Gaza',
-            'role' => 'admin' # admin or user
         ]);
+        $store = User::create([
+            'name' => 'store',
+            'email' => 'store@gmail.com',
+            'password' => Hash::make('123456'),
+            'phone' => '0599916672',
+            'username' => 'store',
+            'status' => 'active',
+            'address' => 'Palestine/Gaza',
+        ]);
+        $user = User::create([
+            'name' => 'user',
+            'email' => 'user@gmail.com',
+            'password' => Hash::make('123456'),
+            'phone' => '0599916674',
+            'username' => 'user',
+            'status' => 'active',
+            'address' => 'Palestine/Gaza',
+        ]);
+
+        $admin->assignRole('admin');
+        $store->assignRole('store_owner');
+        $user->assignRole('user');
     }
 }

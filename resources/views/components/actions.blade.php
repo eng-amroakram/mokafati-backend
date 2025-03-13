@@ -1,8 +1,7 @@
-<td>
+<td wire:ignore>
     <div class="d-flex justify-content-center">
         @if ($delete)
-            <a type="button" class="text-danger  fa-lg me-2 ms-2" wire:click='delete({{ $id }})'
-                title="Delete">
+            <a type="button" class="text-danger  fa-lg me-2 ms-2" wire:click='delete({{ $id }})' title="Delete">
                 <i class="fas fa-trash-can"></i>
             </a>
         @endif
