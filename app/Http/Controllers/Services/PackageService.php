@@ -28,9 +28,9 @@ class PackageService extends Controller
             ->paginate($paginate);
     }
 
-    public function changeAccountStatus($id)
+    public function changeStatus($id)
     {
-        return Package::changeAccountStatus($id);
+        return Package::changeStatus($id);
     }
 
     public function delete($id)

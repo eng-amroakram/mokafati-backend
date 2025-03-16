@@ -15,7 +15,6 @@
     <link rel="stylesheet" href="{{ asset('panel/mdb-pro/css/card.min.css') }}">
     <link rel="stylesheet" href="{{ asset('panel/mdb-pro/css/switch.css') }}">
     <link rel="stylesheet" href="{{ asset('panel/mdb-pro/css/modals.css') }}">
-    {{-- <link rel="stylesheet" href="{{ asset('panel/mdb-pro/css/lightbox.css') }}"> --}}
 
     {{-- Google Font --}}
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;900&display=swap" rel="stylesheet">
@@ -92,7 +91,9 @@
         }
 
         .icon-background {
-            background: linear-gradient(45deg, #6C7AE0, #A5A7D4);
+            /* background: #5299ff; */
+            background: #B2659D;
+
         }
     </style>
 

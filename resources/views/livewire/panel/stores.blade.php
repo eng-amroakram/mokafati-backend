@@ -22,20 +22,21 @@
         </div>
 
         <div class="table-responsive-md text-center">
-            <div class="datatable-loader bg-light" style="height: 8px;" wire:loading>
+            <div class="datatable-loader bg-light" style="height: 8px;" wire:loading wire:target='search'>
                 <span class="datatable-loader-inner"><span class="datatable-progress bg-primary"></span></span>
             </div>
             <table class="table table-bordered text-center" style="margin-bottom: 0rem;">
                 <thead>
                     <tr>
-                        <th class="th-sm"><strong>ID</strong></th>
-                        <th data-mdb-sort="true" class="th-sm"><strong>اسم المتجر</strong></th>
-                        <th data-mdb-sort="false" class="th-sm"><strong>صاحب المتجر</strong></th>
-                        <th data-mdb-sort="false" class="th-sm"><strong>السجل التجاري</strong></th>
-                        <th data-mdb-sort="false" class="th-sm"><strong>الرقم الضريبي</strong></th>
-                        <th data-mdb-sort="false" class="th-sm"><strong>النوع</strong></th>
-                        <th data-mdb-sort="false" class="th-sm"><strong>الفاتورة</strong></th>
-                        <th data-mdb-sort="false" class="th-sm"><strong>التحكم</strong></th>
+                        <th class="th-sm">ID</th>
+                        <th data-mdb-sort="true" class="th-sm">اسم المتجر</th>
+                        <th data-mdb-sort="false" class="th-sm">صاحب المتجر</th>
+                        <th data-mdb-sort="false" class="th-sm">السجل التجاري</th>
+                        <th data-mdb-sort="false" class="th-sm">الرقم الضريبي</th>
+                        <th data-mdb-sort="false" class="th-sm">النوع</th>
+                        <th data-mdb-sort="false" class="th-sm">الحالة</th>
+                        <th data-mdb-sort="false" class="th-sm">المرفقات</th>
+                        <th data-mdb-sort="false" class="th-sm">التحكم</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -51,9 +52,32 @@
                                 <span
                                     class='{{ storeTypeBadge($store->type)['badge'] }}'>{{ storeTypeBadge($store->type)['name'] }}</span>
                             </td>
+                            <td>
+                                <div class="switch">
+                                    <label>
+                                        نشط
+                                        <input wire:click="changeStatus({{ $store->id }})" type="checkbox"
+                                            {{ $store->status == 'active' ? 'checked' : '' }}>
+                                        <span class="lever"></span>
+                                        غير نشط
+                                    </label>
+                                </div>
+                            </td>
 
-                            <td>Image</td>
-                            <x-actions :delete="false" edit="edit_store" :show="false" :link="'#'"
+                            <td>
+                                <div class="lightbox">
+                                    <img src="{{ asset('panel/images/image.png') }}"
+                                        data-mdb-img="{{ $store->commercial_image_table }}" width="30"
+                                        height="30">
+                                    <img src="{{ asset('panel/images/image.png') }}"
+                                        data-mdb-img="{{ $store->tax_image_table }}" width="30" height="30">
+                                    <img src="{{ asset('panel/images/image.png') }}"
+                                        data-mdb-img="{{ $store->invoice_image_table }}" width="30" height="30">
+                                    <img src="{{ asset('panel/images/image.png') }}"
+                                        data-mdb-img="{{ $store->logo_image_table }}" width="30" height="30">
+                                </div>
+                            </td>
+                            <x-actions :delete="true" edit="edit_store" :show="false" :link="'#'"
                                 :id="$store->id"></x-actions>
                         </tr>
 
@@ -101,16 +125,16 @@
 
 
                     <!-- Tabs navs -->
-                    <ul class="nav md-tabs nav-tabs icon-background" id="create-new-user" role="tablist"
-                        >
-                        <li class="nav-item" role="presentation">
-                            <a class="nav-link active fs-6" id="create-new-user-tab-1" href="#create-new-user-tabs-1"
-                                role="tab" aria-controls="create-new-user-tabs-1" aria-selected="true"
-                                data-mdb-toggle="pill">
-                                <i class="fas fa-circle-info me-1"></i>
-                                <strong>
-                                    بيانات المتجر
-                                </strong>
+                    <ul class="nav md-tabs nav-tabs icon-background" id="create-modal" role="tablist">
+
+                        <li class="nav-item">
+                            <a class="nav-link active fs-6 tab-1" href="#tab-1" data-mdb-toggle="pill">
+                                <i class="fas fa-circle-info me-1"></i><strong>بيانات التاجر</strong>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link fs-6 tab-2" href="#tab-2" data-mdb-toggle="pill">
+                                <i class="fas fa-circle-info me-1"></i><strong>بيانات المتجر</strong>
                             </a>
                         </li>
                     </ul>
@@ -118,29 +142,16 @@
 
                     <div class="tab-content" id="ex1-content">
 
-                        <div class="tab-pane fade show active" id="create-new-user-tabs-1" role="tabpanel"
-                            aria-labelledby="create-new-user-tab-1">
+                        <div class="tab-pane fade show active content-1" id="tab-1" role="tabpanel"
+                            aria-labelledby="tab-1">
 
                             <div class="modal-body">
 
-                                <div class="row mb-3">
-
-                                    <div class="col-md-6">
-                                        <label class="form-label" for="forName"><strong>اسم المتجر</strong></label>
-                                        <div class="input-group">
-                                            <span class="input-group-text">
-                                                <i class="fas fa-file-signature"></i>
-                                            </span>
-                                            <input type="text" wire:model.defer="name" maxlength="50"
-                                                class="form-control" placeholder="ادخل اسم المتجر" />
-                                        </div>
-                                        <div class="form-helper text-danger name-validation reset-validation"></div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <label class="form-label" for="forOwnerID"><strong>مالك
-                                                المتجر</strong></label>
-                                        <select class="select" id="owner-store" wire:model.defer="owner_id">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label" for="forOwnerID">مالك
+                                            المتجر</label>
+                                        <select class="select" id="owner-store" wire:model.live="owner_id">
                                             <option value=""></option>
                                             @foreach (users() as $user)
                                                 <option value="{{ $user->id }}">{{ $user->name }}</option>
@@ -150,71 +161,44 @@
                                         </div>
                                     </div>
 
-                                </div>
-
-                                <div class="row mb-3">
-
-                                    <div class="col-md-6">
-                                        <label class="form-label" for="forStoreType"><strong>نوع
-                                                المتجر</strong></label>
-                                        <select class="select" id="store-type" wire:model.defer="type">
-                                            @foreach (store_types() as $key => $value)
-                                                <option value="{{ $key }}">{{ $value }}</option>
-                                            @endforeach
-                                        </select>
-                                        <div class="form-helper text-danger type-validation reset-validation">
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <label class="form-label" for="forCommercialRegistration"><strong>رقم السجل
-                                                التجاري</strong></label>
-                                        <div class="input-group">
-                                            <input type="text" dir="ltr"
-                                                wire:model.defer="commercial_registration" maxlength="14"
-                                                class="form-control" placeholder="5xxx" />
-                                            <span class="input-group-text">
-                                                <i class="fas fa-receipt"></i>
-                                            </span>
-                                        </div>
-                                        <div
-                                            class="form-helper text-danger commercial_registration-validation reset-validation">
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                                <div class="row mb-3">
-
-                                    <div class="col-md-6">
-                                        <label class="form-label" for="forTaxNumber"><strong>رقم
-                                                الضريبة</strong></label>
-                                        <div class="input-group">
-                                            <input type="number" dir="ltr" wire:model.defer="tax_number"
-                                                class="form-control" placeholder="25" />
-                                            <span class="input-group-text">
-                                                <i class="fas fa-comment-dollar"></i>
-                                            </span>
-                                        </div>
-                                        <div class="form-helper text-danger tax_number-validation reset-validation">
-                                        </div>
-                                    </div>
-
-
-                                    <div class="col-md-6">
-                                        <label class="form-label" for="forInvoice"><strong>الفاتورة</strong></label>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label" for="forOwnerName">اسم التاجر</label>
                                         <div class="input-group">
                                             <span class="input-group-text">
-                                                <i class="fas fa-file-invoice"></i>
+                                                <i class="fas fa-file-signature"></i>
                                             </span>
-                                            <input type="text" wire:model.defer="invoice" maxlength="50"
-                                                class="form-control" placeholder="الفاتورة" />
+                                            <input type="text" wire:model.defer="owner_name" maxlength="50"
+                                                class="form-control" placeholder="ادخل اسم التاجر" disabled />
                                         </div>
-                                        <div class="form-helper text-danger invoice-validation reset-validation">
+                                        <div class="form-helper text-danger owner_name-validation reset-validation">
                                         </div>
                                     </div>
                                 </div>
 
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label" for="forOwnerEmail">الايميل</strong></label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="far fa-user"></i></span>
+                                            <input type="text" dir="ltr" wire:model.defer="owner_email"
+                                                maxlength="50" class="form-control" placeholder="Email" disabled />
+                                        </div>
+                                        <div class="form-helper text-danger owner_email-validation reset-validation">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label" for="forOwnerPhone">رقم الموبايل</label>
+                                        <div class="input-group">
+                                            <input type="text" dir="ltr" wire:model.defer="owner_phone"
+                                                maxlength="9" class="form-control" placeholder="5xxx" disabled />
+                                            <span class="input-group-text"
+                                                style="padding-top: 0; padding-bottom:0;">966+</span>
+                                        </div>
+                                        <div class="form-helper text-danger owner_phone-validation reset-validation">
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="modal-footer">
@@ -223,6 +207,8 @@
                                     data-mdb-dismiss="modal">
                                     إغلاق
                                 </button>
+                                <button type="button" class="btn bg-blue-color previousCreator">السابق</button>
+
 
                                 <button type="button" class="btn text-white icon-background addStoreButton fw-bold"
                                     wire:click='addStore()'>
@@ -236,7 +222,117 @@
                                     <span class="spinner-border spinner-border-sm me-2" role="status"
                                         aria-hidden="true" wire:loading wire:target='updateStore'></span>
                                     تحديث</button>
+                                <button type="button"
+                                    class="btn text-white icon-background fw-bold nextCreator">التالي</button>
 
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade content-2" id="tab-2">
+
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label" for="forName">اسم المتجر</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">
+                                                <i class="fas fa-file-signature"></i>
+                                            </span>
+                                            <input type="text" wire:model.defer="name" maxlength="50"
+                                                class="form-control" placeholder="ادخل اسم المتجر" />
+                                        </div>
+                                        <div class="form-helper text-danger name-validation reset-validation"></div>
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label" for="forStoreType">حدد نشاط المتجر</label>
+                                        <select class="select" id="store-type" wire:model.defer="type">
+                                            @foreach (store_types() as $key => $value)
+                                                <option value="{{ $key }}">{{ $value }}</option>
+                                            @endforeach
+                                        </select>
+                                        <div class="form-helper text-danger type-validation reset-validation">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label" for="forCommercialRegistration">رقم السجل
+                                            التجاري</label>
+                                        <div class="input-group">
+                                            <input type="text" dir="ltr"
+                                                wire:model.defer="commercial_registration" maxlength="14"
+                                                class="form-control" placeholder="5xxx" />
+                                            <span class="input-group-text">
+                                                <i class="fas fa-receipt"></i>
+                                            </span>
+                                        </div>
+                                        <div
+                                            class="form-helper text-danger commercial_registration-validation reset-validation">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label" for="forTaxNumber">الرقم الضريبي</label>
+                                        <div class="input-group">
+                                            <input type="text" dir="ltr" wire:model.defer="tax_number"
+                                                class="form-control" placeholder="25" maxlength="15" />
+                                            <span class="input-group-text">
+                                                <i class="fas fa-comment-dollar"></i>
+                                            </span>
+                                        </div>
+                                        <div class="form-helper text-danger tax_number-validation reset-validation">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <x-file-input name="commercial_image" model="form"
+                                            label="صورة السجل التجاري"></x-file-input>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <x-file-input name="tax_image" model="form"
+                                            label="شهادة الرقم الضريبي"></x-file-input>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <x-file-input name="invoice" model="form" label="الفاتورة"></x-file-input>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <x-file-input name="logo" model="form"
+                                            label="شعار المتجر"></x-file-input>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn bg-blue-color closeUserButton"
+                                    data-mdb-dismiss="modal">
+                                    إغلاق
+                                </button>
+
+                                <button type="button" class="btn bg-blue-color previousCreator">السابق</button>
+
+                                <button type="button" class="btn text-white icon-background addStoreButton fw-bold"
+                                    wire:click='addStore()'>
+                                    <span class="spinner-border spinner-border-sm me-2" role="status"
+                                        aria-hidden="true" wire:loading wire:target='addStore'></span>
+                                    حفظ
+                                </button>
+
+                                <button type="button" class="btn text-white icon-background editStoreButton fw-bold"
+                                    wire:click='updateStore()'>
+                                    <span class="spinner-border spinner-border-sm me-2" role="status"
+                                        aria-hidden="true" wire:loading wire:target='updateStore'></span>
+                                    تحديث
+                                </button>
+
+                                <button type="button"
+                                    class="btn text-white icon-background fw-bold nextCreator">التالي</button>
                             </div>
                         </div>
 
@@ -260,6 +356,34 @@
             const $closeUserButton = $(".closeUserButton");
             const $selectOwnerStore = document.getElementById("owner-store");
             const $formControl = $(".form-control");
+            const $previousCreator = $(".previousCreator");
+            const $nextCreator = $(".nextCreator");
+
+            $previousCreator.hide();
+            $nextCreator.show();
+
+            $nextCreator.on('click', function() {
+                $('.tab-1').removeClass('active');
+                $('.content-1').removeClass('active');
+                $('.content-1').removeClass('show');
+                $('.tab-2').addClass('active');
+                $('.content-2').addClass('active');
+                $('.content-2').addClass('show');
+                $previousCreator.show();
+                $nextCreator.hide();
+            });
+
+            $previousCreator.on('click', function() {
+                $('.tab-2').removeClass('active');
+                $('.content-2').removeClass('active');
+                $('.content-2').removeClass('show');
+                $('.tab-1').addClass('active');
+                $('.content-1').addClass('active');
+                $('.content-1').addClass('show');
+                $nextCreator.show();
+                $previousCreator.hide();
+            });
+
 
             $addStoreButton.show();
             $editStoreButton.hide();

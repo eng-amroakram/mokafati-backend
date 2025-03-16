@@ -72,3 +72,17 @@ if (!function_exists('store_types')) {
         ];
     }
 }
+
+if (!function_exists('employee_types')) {
+    function employee_types($type)
+    {
+        $types = [
+            "waiter" => ["name" => "ويتر", "badge" => "badge badge-warning"],
+            "delivery" => ["name" => "موصل", "badge" => "badge badge-success"],
+            "cashier" => ["name" => "كاشير", "badge" => "badge badge-danger"],
+        ];
+
+        return $types[$type] ?? ["name" => "غير معروف", "badge" => "badge badge-dark"];
+
+    }
+}

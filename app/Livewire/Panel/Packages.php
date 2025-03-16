@@ -31,9 +31,9 @@ class Packages extends Component
     public $title = "";
     public $price = "";
     public $cash_back = "";
-    public $rewards = "";
-    public $minimum_purchase = "";
-    public $bonus = "";
+    public $rewards = 0;
+    public $minimum_purchase = 0;
+    public $expected_sales = 0;
     public $validity_period = "حتى نفاذ عدد المكافئات";
     public $model_id = "";
 
@@ -72,7 +72,7 @@ class Packages extends Component
             "cash_back" => $this->cash_back,
             "rewards" => $this->rewards,
             "minimum_purchase" => $this->minimum_purchase,
-            'bonus' => $this->bonus,
+            'expected_sales' => $this->expected_sales,
             // "validity_period" =>  $this->validity_period,
         ];
 
@@ -110,7 +110,7 @@ class Packages extends Component
             "cash_back" => $this->cash_back,
             "rewards" => $this->rewards,
             "minimum_purchase" => $this->minimum_purchase,
-            "bonus" => $this->bonus,
+            "expected_sales" => $this->expected_sales,
             // "validity_period" => $this->validity_period,
         ];
 
@@ -169,7 +169,7 @@ class Packages extends Component
         $this->cash_back = $package->cash_back;
         $this->rewards = $package->rewards;
         $this->minimum_purchase = $package->minimum_purchase;
-        $this->bonus = $package->bonus;
+        $this->expected_sales = $package->expected_sales;
         // $this->validity_period = $package->validity_period;
     }
 
@@ -177,5 +177,24 @@ class Packages extends Component
     public function empty()
     {
         $this->reset();
+    }
+
+    public function updated($filed, $value)
+    {
+        if ($filed == 'rewards' || $filed == 'minimum_purchase') {
+            $this->expected_sales = ((int)$this->rewards ?? 0) * ((int)$this->minimum_purchase ?? 0);
+        }
+    }
+
+    public function changeStatus($id)
+    {
+        $service = $this->setService();
+        $result = $service->changeStatus($id);
+        if ($result) {
+            $this->alertMessage('تم التحديث بنجاح', 'success');
+            return true;
+        }
+        $this->alertMessage('حدث خطأ', 'error');
+        return false;
     }
 }

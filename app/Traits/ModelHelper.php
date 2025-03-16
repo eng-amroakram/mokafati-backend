@@ -19,7 +19,7 @@ trait ModelHelper
         return false;
     }
 
-    public function scopeStatus(Builder $builder, $id)
+    public function scopeChangeStatus(Builder $builder, $id)
     {
         $model = $builder->find($id);
         if ($model) {

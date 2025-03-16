@@ -14,7 +14,11 @@ return new class extends Migration
         Schema::create('employees', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('email')->unique();
+            $table->string('phone')->unique();
+            $table->enum('type', ['waiter', 'delivery', 'cashier']);
             $table->enum('status', ['active', 'inactive']);
+            $table->string('qr_code')->nullable();
             $table->foreignId('store_id')->constrained('stores')->cascadeOnDelete();
             $table->timestamps();
         });

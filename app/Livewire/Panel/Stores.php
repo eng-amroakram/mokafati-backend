@@ -5,6 +5,7 @@ namespace App\Livewire\Panel;
 use App\Http\Controllers\Services\Services;
 use App\Models\Store;
 use App\Models\User;
+use App\Traits\QRValidationTaxNumber;
 use Illuminate\Support\Facades\Validator;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 use Livewire\Attributes\Layout;
@@ -13,11 +14,13 @@ use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
+use Symfony\Component\Process\Process;
 
 class Stores extends Component
 {
     use WithPagination;
     use WithFileUploads;
+    use QRValidationTaxNumber;
 
     protected $paginationTheme = 'bootstrap';
     protected $service = null;
@@ -31,10 +34,16 @@ class Stores extends Component
 
     public $name = "";
     public $owner_id = "";
+    public $owner_name = "";
+    public $owner_email = "";
+    public $owner_phone = "";
     public $commercial_registration = "";
+    public $commercial_image = null;
     public $tax_number = "";
+    public $tax_image = null;
     public $type = "";
-    public $invoice = "";
+    public $invoice = null;
+    public $logo = null;
     public $model_id = "";
 
 
@@ -89,12 +98,19 @@ class Stores extends Component
             "tax_number" => $this->tax_number,
             "type" => $this->type,
             'invoice' => $this->invoice,
+            'commercial_image' => $this->commercial_image,
+            'tax_image' => $this->tax_image,
+            'logo' => $this->logo
         ];
 
         $rules = $service->rules();
         $messages = $service->messages();
         $validator = Validator::make($data, $rules, $messages);
         $errors = array_map(fn($value) => $value[0], $validator->errors()->toArray());
+
+        if (!$this->validateTaxNumber($this->invoice, $this->tax_number)) {
+            $errors['tax_number'] = 'الرقم الضريبي المدخل لا يتطابق مع الفاتورة';
+        }
 
         if (count($errors)) {
             $this->dispatch('create-errors', $errors);
@@ -176,5 +192,29 @@ class Stores extends Component
     public function empty()
     {
         $this->reset();
+    }
+
+    public function updated($field, $value)
+    {
+        if ($field == "owner_id") {
+            $owner = User::where('id', $value)->first();
+            if ($owner) {
+                $this->owner_name = $owner->name;
+                $this->owner_email = $owner->email;
+                $this->owner_phone = $owner->phone;
+            }
+        }
+    }
+
+    public function changeStatus($id)
+    {
+        $service = $this->setService();
+        $result = $service->changeStatus($id);
+        if ($result) {
+            $this->alertMessage('تم التحديث بنجاح', 'success');
+            return true;
+        }
+        $this->alertMessage('حدث خطأ', 'error');
+        return false;
     }
 }

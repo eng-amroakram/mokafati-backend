@@ -28,13 +28,19 @@ class StoreService extends Controller
             ->paginate($paginate);
     }
 
-    public function changeAccountStatus($id)
+    public function changeStatus($id)
     {
-        return Store::changeAccountStatus($id);
+        return Store::changeStatus($id);
     }
 
     public function delete($id)
     {
+        Store::deleteFile($id, 'commercial_image');
+        Store::deleteFile($id, 'tax_image');
+        Store::deleteFile($id, 'invoice');
+        Store::deleteFile($id, 'logo');
+        $store = Store::find($id);
+        $store->owner->syncRoles("user");
         return Store::deleteModel($id);
     }
 

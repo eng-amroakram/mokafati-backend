@@ -2,11 +2,16 @@
 
 namespace App\Models;
 
+use App\Traits\ModelHelper;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Store extends Model
 {
+    use ModelHelper;
+    protected $file_path = 'images/store-images';
+
     protected $fillable = [
         'owner_id',
         'name',
@@ -14,8 +19,37 @@ class Store extends Model
         'tax_number',
         'type',
         'status',
+        'commercial_image',
+        'tax_image',
         'invoice',
+        'logo',
     ];
+
+    public function getImagePath($filed)
+    {
+        $image = $this->attributes[$filed];
+        return $image && Storage::disk('public')->exists($image) ? asset('storage/' . $image) : asset('panel/images/no-image-available.jpg');
+    }
+
+    public function getCommercialImageTableAttribute()
+    {
+        return $this->getImagePath('commercial_image');
+    }
+
+    public function getTaxImageTableAttribute()
+    {
+        return $this->getImagePath('tax_image');
+    }
+
+    public function getInvoiceImageTableAttribute()
+    {
+        return $this->getImagePath('invoice');
+    }
+
+    public function getLogoImageTableAttribute()
+    {
+        return $this->getImagePath('logo');
+    }
 
     public function scopeData($query)
     {
@@ -27,7 +61,10 @@ class Store extends Model
             'tax_number',
             'type',
             'status',
+            'commercial_image',
+            'tax_image',
             'invoice',
+            'logo',
         ]);
     }
 
@@ -51,7 +88,10 @@ class Store extends Model
             'commercial_registration' => ['required',],
             'tax_number' => ['required'],
             'type' => ['required', 'in:cafe,restaurant,entertainment,health,beauty,tourism,other'],
-            'invoice' => ['required'],
+            'commercial_image' => ['required', 'mimes:jpeg,png,jpg,gif,svg'],
+            'tax_image' => ['required', 'mimes:jpeg,png,jpg,gif,svg'],
+            'invoice' => ['required', 'mimes:jpeg,png,jpg,gif,svg'],
+            'logo' => ['required', 'mimes:jpeg,png,jpg,gif,svg'],
         ];
     }
 
@@ -63,12 +103,23 @@ class Store extends Model
             'commercial_registration.required' => 'هذا الحقل مطلوب',
             'tax_number.required' => 'هذا الحقل مطلوب',
             'type.required' => 'هذا الحقل مطلوب',
+            'commercial_image.required' => 'هذا الحقل مطلوب',
+            'commercial_image.mimes' => 'يجب أن تكون الصورة بصيغة jpeg, png, jpg, gif, أو svg',
+            'tax_image.required' => 'هذا الحقل مطلوب',
+            'tax_image.mimes' => 'يجب أن تكون الصورة بصيغة jpeg, png, jpg, gif, أو svg',
             'invoice.required' => 'هذا الحقل مطلوب',
+            'invoice.mimes' => 'يجب أن تكون الصورة بصيغة jpeg, png, jpg, gif, أو svg',
+            'logo.required' => 'هذا الحقل مطلوب',
+            'logo.mimes' => 'يجب أن تكون الصورة بصيغة jpeg, png, jpg, gif, أو svg',
         ];
     }
 
     public function scopeStoreModel(Builder $builder, array $data = [])
     {
+        $data['commercial_image'] = $builder->storeFile($data['commercial_image']);
+        $data['tax_image'] = $builder->storeFile($data['tax_image']);
+        $data['invoice'] = $builder->storeFile($data['invoice']);
+        $data['logo'] = $builder->storeFile($data['logo']);
         $user = $builder->create($data);
 
         if ($user) {
@@ -80,13 +131,49 @@ class Store extends Model
 
     public function scopeUpdateModel(Builder $builder, $data, $id)
     {
-        $user = $builder->find($id);
 
-        if ($user) {
-            $user = $user->update($data);
-            return true;
+        $commercial_image = $data['commercial_image'];
+
+        if (gettype($commercial_image) == "object") {
+            $builder->deleteFile($id, 'commercial_image');
+            $data['commercial_image'] = $builder->storeFile($commercial_image);
+        } else {
+            unset($data['commercial_image']);
         }
 
+        $tax_image = $data['tax_image'];
+
+        if (gettype($tax_image) == "object") {
+            $builder->deleteFile($id, 'tax_image');
+            $data['tax_image'] = $builder->storeFile($tax_image);
+        } else {
+            unset($data['tax_image']);
+        }
+
+        $invoice = $data['invoice'];
+
+        if (gettype($invoice) == "object") {
+            $builder->deleteFile($id, 'invoice');
+            $data['invoice'] = $builder->storeFile($invoice);
+        } else {
+            unset($data['invoice']);
+        }
+
+        $logo = $data['logo'];
+
+        if (gettype($logo) == "object") {
+            $builder->deleteFile($id, 'logo');
+            $data['logo'] = $builder->storeFile($logo);
+        } else {
+            unset($data['logo']);
+        }
+
+        $store = $builder->find($id);
+
+        if ($store) {
+            $store = $store->update($data);
+            return true;
+        }
         return false;
     }
 

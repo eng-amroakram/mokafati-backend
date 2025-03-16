@@ -28,9 +28,14 @@
             <table class="table table-bordered text-center" style="margin-bottom: 0rem;">
                 <thead>
                     <tr>
-                        <th class="th-sm"><strong>ID</strong></th>
-                        <th data-mdb-sort="true" class="th-sm"><strong>اسم الموظف</strong></th>
-                        <th data-mdb-sort="false" class="th-sm"><strong>التحكم</strong></th>
+                        <th class="th-sm">ID</th>
+                        <th data-mdb-sort="true" class="th-sm">اسم الموظف</th>
+                        <th data-mdb-sort="true" class="th-sm">الايميل</th>
+                        <th data-mdb-sort="true" class="th-sm">رقم الهاتف</th>
+                        <th data-mdb-sort="true" class="th-sm">النوع</th>
+                        <th data-mdb-sort="true" class="th-sm">الحالة</th>
+                        <th data-mdb-sort="true" class="th-sm">Qr Code</th>
+                        <th data-mdb-sort="false" class="th-sm">التحكم</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -38,20 +43,39 @@
                         <tr>
                             <td>{{ $employee->id }}</td>
                             <td>{{ $employee->name }}</td>
+                            <td>{{ $employee->email }}</td>
+                            <td>{{ $employee->phone }}</td>
+                            <td>
+                                <span
+                                    class='{{ employee_types($employee->type)['badge'] }}'>{{ employee_types($employee->type)['name'] }}</span>
+                            </td>
+                            <td>
+                                <div class="switch">
+                                    <label>
+                                        نشط
+                                        <input wire:click="changeStatus({{ $employee->id }})" type="checkbox"
+                                            {{ $employee->status == 'active' ? 'checked' : '' }}>
+                                        <span class="lever"></span>
+                                        غير نشط
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="lightbox">
+                                    <img src="{{ asset('panel/images/qr-code.png') }}"
+                                        data-mdb-img="{{ $employee->qr_code_table }}" width="30" height="30">
+                                </div>
+                            </td>
                             <x-actions :delete="true" edit="edit_store" :show="false" :link="'#'"
                                 :id="$employee->id"></x-actions>
                         </tr>
-
                     @empty
-
                         <tr>
                             <td colspan="8" class="fw-bold fs-6">لا يوجد نتائج !!</td>
                         </tr>
                     @endforelse
-
                 </tbody>
             </table>
-
             <p class="text-center text-muted my-4" wire:loading>جاري تحميل البيانات ...</p>
         </div>
 
@@ -107,10 +131,10 @@
 
                             <div class="modal-body">
 
-                                <div class="row mb-3">
+                                <div class="row">
 
-                                    <div class="col-md-12">
-                                        <label class="form-label" for="forName"><strong>اسم الموظف</strong></label>
+                                    <div class="col-md-12 mb-3">
+                                        <label class="form-label" for="forName">اسم الموظف</label>
                                         <div class="input-group">
                                             <span class="input-group-text">
                                                 <i class="fas fa-file-signature"></i>
@@ -120,6 +144,45 @@
                                         </div>
                                         <div class="form-helper text-danger name-validation reset-validation"></div>
                                     </div>
+
+                                    <div class="col-md-12 mb-3">
+                                        <label class="form-label" for="forEmail">الايميل</strong></label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="far fa-user"></i></span>
+                                            <input type="text" dir="ltr" wire:model.defer="email"
+                                                maxlength="50" class="form-control" placeholder="Email" />
+                                        </div>
+                                        <div class="form-helper text-danger email-validation reset-validation">
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+                                <div class="row">
+                                    <div class="col-md-12 mb-3">
+                                        <label class="form-label" for="forPhone">رقم الهاتف</label>
+                                        <div class="input-group">
+                                            <input type="text" dir="ltr" wire:model.defer="phone"
+                                                maxlength="9" class="form-control" placeholder="5xxx" />
+                                            <span class="input-group-text"
+                                                style="padding-top: 0; padding-bottom:0;">966+</span>
+                                        </div>
+                                        <div class="form-helper text-danger phone-validation reset-validation">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12 mb-3">
+                                        <label class="form-label" for="forType">نوع الموظف</label>
+                                        <select class="select" id="employee-type" wire:model.defer="type">
+                                            <option value="waiter" selected>ويتر</option>
+                                            <option value="delivery">موصل</option>
+                                            <option value="cashier">كاشير</option>
+                                        </select>
+                                        <div class="form-helper text-danger type-validation reset-validation">
+                                        </div>
+                                    </div>
+
                                 </div>
 
                             </div>
@@ -131,14 +194,16 @@
                                     إغلاق
                                 </button>
 
-                                <button type="button" class="btn text-white icon-background addEmployeeButton fw-bold"
+                                <button type="button"
+                                    class="btn text-white icon-background addEmployeeButton fw-bold"
                                     wire:click='addEmployee()'>
 
                                     <span class="spinner-border spinner-border-sm me-2" role="status"
                                         aria-hidden="true" wire:loading wire:target='addEmployee'></span>
                                     حفظ</button>
 
-                                <button type="button" class="btn text-white icon-background editEmployeeButton fw-bold"
+                                <button type="button"
+                                    class="btn text-white icon-background editEmployeeButton fw-bold"
                                     wire:click='updateEmployee()'>
                                     <span class="spinner-border spinner-border-sm me-2" role="status"
                                         aria-hidden="true" wire:loading wire:target='updateEmployee'></span>
@@ -196,11 +261,11 @@
                 $editEmployeeButton.hide();
             });
 
-            // Livewire.on("singleSelectOwner", function(selected) {
-            //     const singleSelect = document.querySelector("#owner-store");
-            //     const singleSelectInstance = mdb.Select.getInstance(singleSelect);
-            //     singleSelectInstance.setValue(selected[0].toString());
-            // });
+            Livewire.on("singleSelectInput", function(selected) {
+                const singleSelect = document.querySelector("#employee-type");
+                const singleSelectInstance = mdb.Select.getInstance(singleSelect);
+                singleSelectInstance.setValue(selected[0]);
+            });
 
             Livewire.on("create-errors", function(errors) {
                 $(".reset-validation").text("");

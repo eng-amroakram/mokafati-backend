@@ -28,6 +28,9 @@ class StoreSeeder extends Seeder
 
         Employee::create([
             'name' => 'employee',
+            'email' => 'employee@gmail.com',
+            'phone' => '0599916672',
+            'type' => 'waiter',
             'status' => 'active',
             'store_id' => $store->id,
         ]);

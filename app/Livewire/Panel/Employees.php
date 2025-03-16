@@ -30,6 +30,10 @@ class Employees extends Component
     public $filters = [];
 
     public $name = "";
+    public $email = "";
+    public $phone = "";
+    public $type = "waiter";
+    public $qr_code = "";
     public $model_id = "";
 
     private function setService()
@@ -66,6 +70,10 @@ class Employees extends Component
 
         $data = [
             "name" => $this->name,
+            "email" => $this->email,
+            "phone" => $this->phone,
+            "type" => $this->type,
+            "status" => 'active',
             "store_id" => $store_manager->store->id,
         ];
 
@@ -96,6 +104,9 @@ class Employees extends Component
 
         $data = [
             "name" => $this->name,
+            "email" => $this->email,
+            "phone" => $this->phone,
+            "type" => $this->type,
         ];
 
         $rules = $service->rules($this->model_id);
@@ -148,11 +159,27 @@ class Employees extends Component
         $employee = Employee::where('id', $id)->first();
         $this->model_id = $id;
         $this->name = $employee->name;
+        $this->email = $employee->email;
+        $this->phone = $employee->phone;
+        $this->type = $employee->type;
+        $this->dispatch('singleSelectInput', $this->type);
     }
 
     #[On('reset-properties')]
     public function empty()
     {
         $this->reset();
+    }
+
+    public function changeStatus($id)
+    {
+        $service = $this->setService();
+        $result = $service->changeStatus($id);
+        if ($result) {
+            $this->alertMessage('تم التحديث بنجاح', 'success');
+            return true;
+        }
+        $this->alertMessage('حدث خطأ', 'error');
+        return false;
     }
 }

@@ -19,7 +19,12 @@ return new class extends Migration
             $table->string('tax_number');
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->enum('type', ['cafe', 'restaurant', 'entertainment', 'health', 'beauty', 'tourism', 'other']);
-            $table->string('invoice');
+
+            #Files
+            $table->string('commercial_image')->nullable();
+            $table->string('tax_image')->nullable();
+            $table->string('invoice')->nullable();
+            $table->string('logo')->nullable();
             $table->timestamps();
         });
     }

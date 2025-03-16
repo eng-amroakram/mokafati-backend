@@ -18,7 +18,8 @@ return new class extends Migration
             $table->float('cash_back');
             $table->integer('rewards');
             $table->float('minimum_purchase');
-            $table->string('bonus');
+            $table->string('expected_sales');
+            $table->enum('status', ['active', 'inactive'])->default('active');
             $table->string('validity_period')->nullable();
             $table->timestamps();
         });

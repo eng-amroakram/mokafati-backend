@@ -1,5 +1,5 @@
 <!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark "style="background: linear-gradient(45deg, #5299FF, #B2659D);">
+<nav class="navbar navbar-expand-lg navbar-dark "style="background: #B2659D;">
     <!-- Container wrapper -->
     <div class="container">
         <!-- Toggle button -->
@@ -17,10 +17,10 @@
                 <i class="fas fa-bars"></i>
             </button>
             <!-- Navbar brand -->
-            <a class="navbar-brand mt-2 mt-lg-0" href="#">
+            {{-- <a class="navbar-brand mt-2 mt-lg-0" href="#">
                 <img src="{{ asset('panel/images/logo/logo-white.svg') }}" height="28" alt="Munagasatcom Brand"
                     loading="lazy" />
-            </a>
+            </a> --}}
             <!-- Navbar brand -->
             <!-- Left links -->
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
@@ -35,16 +35,16 @@
         <!-- Right elements -->
         <div class="d-flex align-items-center">
             <!-- Icon -->
-            <a class="text-reset me-3" href="#">
-                <i class="fas fa-shopping-cart"></i>
-            </a>
+            {{-- <a class="text-reset me-3" href="#">
+                <i class="fas fa-shopping-cart text-white"></i>
+            </a> --}}
 
             <!-- Notifications -->
             <div class="dropdown">
                 <a data-mdb-dropdown-init data-mdb-toggle="dropdown"
                     class="text-reset me-3 dropdown-toggle hidden-arrow" href="#" id="navbarDropdownMenuLink"
                     role="button" aria-expanded="false">
-                    <i class="fas fa-bell"></i>
+                    <i class="fas fa-bell text-white"></i>
                     <span class="badge rounded-pill badge-notification bg-danger">1</span>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
@@ -69,7 +69,7 @@
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuAvatar">
                     <li>
-                        <a class="dropdown-item fw-bold" href="{{ route('admin.panel.logout') }}">تسجيل الخروج</a>
+                        <a class="dropdown-item " href="{{ route('admin.panel.logout') }}">تسجيل الخروج</a>
                     </li>
                 </ul>
             </div>

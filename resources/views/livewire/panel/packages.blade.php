@@ -28,15 +28,16 @@
             <table class="table table-bordered text-center" style="margin-bottom: 0rem;">
                 <thead>
                     <tr>
-                        <th class="th-sm"><strong>ID</strong></th>
-                        <th data-mdb-sort="true" class="th-sm"><strong>الاسم</strong></th>
-                        <th data-mdb-sort="false" class="th-sm"><strong>سعرالباقة</strong></th>
-                        <th data-mdb-sort="false" class="th-sm"><strong>نسبة الكاش باك</strong></th>
-                        <th data-mdb-sort="false" class="th-sm"><strong>عدد المكافئات</strong></th>
-                        <th data-mdb-sort="false" class="th-sm"><strong>الحد الادنى للشراء</strong></th>
-                        <th data-mdb-sort="false" class="th-sm"><strong>البونس</strong></th>
-                        <th data-mdb-sort="false" class="th-sm"><strong>مدة صلاحية الباقة</strong></th>
-                        <th data-mdb-sort="false" class="th-sm"><strong>التحكم</strong></th>
+                        <th class="th-sm">ID</th>
+                        <th data-mdb-sort="true" class="th-sm">الاسم</th>
+                        <th data-mdb-sort="false" class="th-sm">سعرالباقة</th>
+                        <th data-mdb-sort="false" class="th-sm">نسبة الكاش باك</th>
+                        <th data-mdb-sort="false" class="th-sm">عدد المكافئات</th>
+                        <th data-mdb-sort="false" class="th-sm">الحد الادنى للشراء</th>
+                        <th data-mdb-sort="false" class="th-sm">المبيعات المتوقعة</th>
+                        <th data-mdb-sort="false" class="th-sm">مدة صلاحية الباقة</th>
+                        <th data-mdb-sort="false" class="th-sm">الحالة</th>
+                        <th data-mdb-sort="false" class="th-sm">التحكم</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -48,9 +49,20 @@
                             <td>{{ $package->cash_back }} %</td>
                             <td>{{ $package->rewards }} مكافئة</td>
                             <td>{{ $package->minimum_purchase }} ريال</td>
-                            <td>{{ $package->bonus }}</td>
+                            <td>{{ $package->expected_sales }} ريال</td>
                             <td>
                                 <span class='{{ badge('employee') }}'>حتى نفاذ عدد المكافئات</span>
+                            </td>
+                            <td>
+                                <div class="switch">
+                                    <label>
+                                        نشط
+                                        <input wire:click="changeStatus({{ $package->id }})" type="checkbox"
+                                            {{ $package->status == 'active' ? 'checked' : '' }}>
+                                        <span class="lever"></span>
+                                        غير نشط
+                                    </label>
+                                </div>
                             </td>
                             <x-actions delete="delete_package" edit="edit_package" :show="false" :link="'#'"
                                 :id="$package->id"></x-actions>
@@ -59,7 +71,7 @@
                     @empty
 
                         <tr>
-                            <td colspan="9" class="fw-bold fs-6">لا يوجد نتائج !!</td>
+                            <td colspan="9" class=" fs-6">لا يوجد نتائج !!</td>
                         </tr>
                     @endforelse
 
@@ -100,8 +112,7 @@
 
 
                     <!-- Tabs navs -->
-                    <ul class="nav md-tabs nav-tabs" id="create-new-user" role="tablist"
-                        style="background-color: #303030;">
+                    <ul class="nav md-tabs nav-tabs icon-background" id="create-new-user" role="tablist">
                         <li class="nav-item" role="presentation">
                             <a class="nav-link active fs-6" id="create-new-user-tab-1" href="#create-new-user-tabs-1"
                                 role="tab" aria-controls="create-new-user-tabs-1" aria-selected="true"
@@ -122,10 +133,10 @@
 
                             <div class="modal-body">
 
-                                <div class="row mb-3">
+                                <div class="row">
 
-                                    <div class="col-md-6">
-                                        <label class="form-label" for="forTitle"><strong>اسم الباقة</strong></label>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label" for="forTitle">اسم الباقة</label>
                                         <div class="input-group">
                                             <span class="input-group-text">
                                                 <i class="fas fa-heading"></i>
@@ -136,15 +147,15 @@
                                         <div class="form-helper text-danger title-validation reset-validation"></div>
                                     </div>
 
-                                    <div class="col-md-6">
-                                        <label class="form-label" for="forPrice"><strong>سعر الباقة</strong></label>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label" for="forPrice">سعر الباقة</label>
                                         <div class="input-group">
                                             <span class="input-group-text">
                                                 <i class="fas fa-hand-holding-dollar"></i>
                                             </span>
                                             <input type="number" wire:model.defer="price" class="form-control"
                                                 max="5000" placeholder="سعر الباقة" />
-                                            <span class="input-group-text fw-bold"
+                                            <span class="input-group-text"
                                                 style="padding-top:0px; padding-bottom:0px; ">
                                                 ريال
                                             </span>
@@ -155,18 +166,18 @@
 
                                 </div>
 
-                                <div class="row mb-3">
+                                <div class="row">
 
-                                    <div class="col-md-6">
-                                        <label class="form-label" for="forName"><strong>نسبة الكاش
-                                                باك</strong></label>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label" for="forName">نسبة الكاش
+                                            باك</label>
                                         <div class="input-group">
                                             <span class="input-group-text">
                                                 <i class="fas fa-money-bill"></i>
                                             </span>
                                             <input type="number" wire:model.defer="cash_back" max="2000"
-                                                class="form-control" placeholder="ادخل الكاش باك" />
-                                            <span class="input-group-text fw-bold"
+                                                class="form-control" placeholder="ادخل نسبة الكاش باك" />
+                                            <span class="input-group-text"
                                                 style="padding-top:0px; padding-bottom:0px;">
                                                 %
                                             </span>
@@ -175,18 +186,17 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-6">
-                                        <label class="form-label" for="forName"><strong>عدد
-                                                المكافئات</strong></label>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label" for="forName">عدد المكافأت</label>
                                         <div class="input-group">
                                             <span class="input-group-text">
                                                 <i class="fas fa-hand-holding-heart"></i>
                                             </span>
-                                            <input type="number" wire:model.defer="rewards" max="5000"
-                                                class="form-control" placeholder="عدد  المكافئات" />
-                                            <span class="input-group-text fw-bold"
+                                            <input type="number" wire:model.live="rewards" max="5000"
+                                                class="form-control" placeholder="عدد المكافأت" />
+                                            <span class="input-group-text"
                                                 style="padding-top:0px; padding-bottom:0px;">
-                                                مكافئة
+                                                مكافأة
                                             </span>
                                         </div>
                                         <div class="form-helper text-danger rewards-validation reset-validation">
@@ -196,18 +206,18 @@
                                 </div>
 
 
-                                <div class="row mb-3">
+                                <div class="row">
 
-                                    <div class="col-md-6">
-                                        <label class="form-label" for="forName"><strong>الحد الادنى
-                                                للشراء</strong></label>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label" for="forName">الحد الادنى
+                                            للشراء</label>
                                         <div class="input-group">
                                             <span class="input-group-text">
                                                 <i class="fas fa-cash-register"></i>
                                             </span>
-                                            <input type="number" wire:model.defer="minimum_purchase" max="2000"
+                                            <input type="number" wire:model.live="minimum_purchase" max="2000"
                                                 class="form-control" placeholder="ادخل الحد الادنى للشراء" />
-                                            <span class="input-group-text fw-bold"
+                                            <span class="input-group-text"
                                                 style="padding-top:0px; padding-bottom:0px;">
                                                 ريال
                                             </span>
@@ -217,27 +227,33 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-6">
-                                        <label class="form-label" for="forName"><strong>البونص من
-                                                العملاء</strong></label>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label" for="forExpectedSales">المبيعات المتوقعة</label>
                                         <div class="input-group">
                                             <span class="input-group-text">
                                                 <i class="fas fa-people-carry-box"></i>
                                             </span>
-                                            <input type="number" wire:model.defer="bonus" max="500"
-                                                class="form-control" placeholder="البونص من العملاء" />
+                                            <input type="number" wire:model.defer="expected_sales" max="10000"
+                                                class="form-control" placeholder="عدد المكافات * الحد الأدنى للشراء"
+                                                disabled />
+
+                                            <span class="input-group-text"
+                                                style="padding-top:0px; padding-bottom:0px;">
+                                                ريال
+                                            </span>
                                         </div>
-                                        <div class="form-helper text-danger bonus-validation reset-validation">
+                                        <div
+                                            class="form-helper text-danger expected_sales-validation reset-validation">
                                         </div>
                                     </div>
 
                                 </div>
 
-                                <div class="row mb-3">
+                                <div class="row">
 
-                                    <div class="col-md-6">
-                                        <label class="form-label" for="forName"><strong>مدة صلاحية
-                                                الباقة</strong></label>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label" for="forName">مدة صلاحية
+                                            الباقة</label>
                                         <div class="input-group">
                                             <span class="input-group-text">
                                                 <i class="far fa-hourglass-half"></i>

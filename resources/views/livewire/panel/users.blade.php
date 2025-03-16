@@ -28,12 +28,12 @@
             <table class="table table-bordered text-center" style="margin-bottom: 0rem;">
                 <thead>
                     <tr>
-                        <th class="th-sm"><strong>ID</strong></th>
-                        <th data-mdb-sort="true" class="th-sm"><strong>الاسم</strong></th>
-                        <th data-mdb-sort="false" class="th-sm"><strong>الايميل</strong></th>
-                        <th data-mdb-sort="false" class="th-sm"><strong>رقم الهاتف</strong></th>
-                        <th data-mdb-sort="false" class="th-sm"><strong>النوع</strong></th>
-                        <th data-mdb-sort="false" class="th-sm"><strong>التحكم</strong></th>
+                        <th class="th-sm">ID</th>
+                        <th data-mdb-sort="true" class="th-sm">الاسم</th>
+                        <th data-mdb-sort="false" class="th-sm">الايميل</th>
+                        <th data-mdb-sort="false" class="th-sm">رقم الهاتف</th>
+                        <th data-mdb-sort="false" class="th-sm">النوع</th>
+                        <th data-mdb-sort="false" class="th-sm">التحكم</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -116,10 +116,10 @@
 
                             <div class="modal-body">
 
-                                <div class="row mb-3">
+                                <div class="row">
 
-                                    <div class="col-md-6">
-                                        <label class="form-label" for="forName"><strong>اسم المستخدم</strong></label>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label" for="forName">اسم المستخدم</strong></label>
                                         <div class="input-group">
                                             <span class="input-group-text">
                                                 <i class="far fa-user"></i>
@@ -130,8 +130,8 @@
                                         <div class="form-helper text-danger name-validation reset-validation"></div>
                                     </div>
 
-                                    <div class="col-md-6">
-                                        <label class="form-label" for="forEmail"><strong>الايميل</strong></label>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label" for="forEmail">الايميل</strong></label>
                                         <div class="input-group">
                                             <span class="input-group-text"><i class="far fa-user"></i></span>
                                             <input type="text" dir="ltr" wire:model.defer="email"
@@ -143,11 +143,11 @@
 
                                 </div>
 
-                                <div class="row mb-3">
+                                <div class="row">
 
-                                    <div class="col-md-6">
-                                        <label class="form-label" for="forUsername"><strong>معرف
-                                                المستخدم</strong></label>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label" for="forUsername">معرف
+                                            المستخدم</label>
                                         <div class="input-group">
 
                                             <input type="text" dir="ltr" wire:model.defer="username"
@@ -160,8 +160,8 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-6">
-                                        <label class="form-label" for="forPhone"><strong>رقم الهاتف</strong></label>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label" for="forPhone">رقم الهاتف</label>
                                         <div class="input-group">
                                             <input type="text" dir="ltr" wire:model.defer="phone"
                                                 maxlength="9" class="form-control" placeholder="5xxx" />
@@ -174,10 +174,10 @@
 
                                 </div>
 
-                                <div class="row mb-3">
+                                <div class="row">
 
-                                    <div class="col-md-6">
-                                        <label class="form-label" for="forAddress"><strong>العنوان</strong></label>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label" for="forAddress">العنوان</label>
                                         <div class="input-group">
                                             <span class="input-group-text">
                                                 <i class="far fa-user"></i>
@@ -189,8 +189,8 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-6">
-                                        <label class="form-label" for="forType"><strong>نوع المستخدم</strong></label>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label" for="forType">نوع المستخدم</label>
                                         <select class="select" id="user-role" wire:model.defer="role">
                                             <option value="user">مستخدم عادي</option>
                                             <option value="admin">إداري</option>
@@ -203,10 +203,10 @@
 
                                 <div class="row">
 
-                                    <div class="col-md-6">
+                                    <div class="col-md-6 mb-3">
 
-                                        <label class="form-label" for="forPassword"><strong>كلمة
-                                                المرور</strong></label>
+                                        <label class="form-label" for="forPassword">كلمة
+                                            المرور</label>
                                         <div class="input-group">
                                             <span class="input-group-text">
                                                 <i class="fas fa-key"></i>

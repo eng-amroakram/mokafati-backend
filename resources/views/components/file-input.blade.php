@@ -20,7 +20,7 @@
             placeholder="ارفق {{ $label }}" />
 
     </div>
-    <div class="form-helper text-danger {{ $name }}-{{ $model }}-validation reset-validation">
+    <div class="form-helper text-danger {{ $name }}-validation reset-validation">
     </div>
     <!-- Progress Bar -->
 

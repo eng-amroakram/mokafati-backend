@@ -30,13 +30,14 @@ class EmployeeService extends Controller
             ->paginate($paginate);
     }
 
-    public function changeAccountStatus($id)
+    public function changeStatus($id)
     {
-        return Employee::changeAccountStatus($id);
+        return Employee::changeStatus($id);
     }
 
     public function delete($id)
     {
+        Employee::deleteFile($id, 'qr_code');
         return Employee::deleteModel($id);
     }
 

@@ -15,14 +15,14 @@
             <div class="form-helper text-danger password-validation"></div>
         </div>
 
-        <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-4 px-2">
             <!-- Checkbox -->
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="rememberMe"  />
-                <label class="form-check-label fw-bold" for="rememberMe">تذكرني</label>
+                <input class="form-check-input" type="checkbox" value="" id="rememberMe" />
+                <label class="form-check-label" for="rememberMe">تذكرني</label>
             </div>
             <div>
-                <a href="#" class="fw-bold">هل نسيت كلمة المرور</a>
+                <a href="#">هل نسيت كلمة المرور</a>
             </div>
         </div>
 

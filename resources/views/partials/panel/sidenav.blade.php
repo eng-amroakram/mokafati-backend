@@ -1,6 +1,5 @@
-<nav id="sidenav-1" class="sidenav ps ps--active-y" data-mdb-color="light"
-    style="background: linear-gradient(45deg, #5299FF, #B2659D);" role="navigation" data-mdb-mode="side"
-    data-mdb-right="false" data-mdb-hidden="true" data-mdb-accordion="true">
+<nav id="sidenav-1" class="sidenav ps ps--active-y" data-mdb-color="light" style="background:  #B2659D;" role="navigation"
+    data-mdb-mode="side" data-mdb-right="false" data-mdb-hidden="true" data-mdb-accordion="true">
 
     <a class="ripple d-flex justify-content-center py-5" style="padding-top: 5rem !important;"
         href="{{ route('admin.panel.index') }}" data-ripple-color="primary">

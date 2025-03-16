@@ -16,7 +16,8 @@ class Package extends Model
         'cash_back',
         'rewards',
         'minimum_purchase',
-        'bonus',
+        'expected_sales',
+        'status',
         'validity_period',
     ];
 
@@ -29,7 +30,8 @@ class Package extends Model
             'cash_back',
             'rewards',
             'minimum_purchase',
-            'bonus',
+            'expected_sales',
+            'status',
             'validity_period',
         ]);
     }
@@ -54,7 +56,7 @@ class Package extends Model
             'cash_back' => ['required',],
             'rewards' => ['required'],
             'minimum_purchase' => ['required'],
-            'bonus' => ['required'],
+            'expected_sales' => ['required'],
             'validity_period' => ['string'],
         ];
     }
@@ -67,7 +69,7 @@ class Package extends Model
             'cash_back.required' => 'هذا الحقل مطلوب',
             'rewards.required' => 'هذا الحقل مطلوب',
             'minimum_purchase.required' => 'هذا الحقل مطلوب',
-            'bonus.required' => 'هذا الحقل مطلوب',
+            'expected_sales.required' => 'هذا الحقل مطلوب',
             'validity_period.required' => 'هذا الحقل مطلوب',
         ];
     }
