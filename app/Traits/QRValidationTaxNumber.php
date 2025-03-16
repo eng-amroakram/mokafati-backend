@@ -11,6 +11,8 @@ trait QRValidationTaxNumber
     {
         $base64Invoice = $this->getBase64FromImage($invoiceImage);
         $decodedData = $this->decodeTLV($base64Invoice);
+        dd($decodedData);
+        // 311235136600003
         if (isset($decodedData['store_tax_number']) && trim($decodedData['store_tax_number']) === trim($taxNumber)) {
             return true;
         }
