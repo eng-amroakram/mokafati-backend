@@ -174,6 +174,25 @@
         });
     </script>
 
+    <script type="text/javascript">
+        $(document).ready(function() {
+            const $dropdownToggle = document.getElementById('NotificationDropDown');
+            const $dropdownMenu = document.querySelector('.dropdown-menu');
+
+            // منع إغلاق القائمة عند النقر داخلها
+            $dropdownMenu.addEventListener('click', function(event) {
+                event.stopPropagation();
+            });
+
+            // عند الضغط خارج القائمة تغلق
+            $(document).on('click', function(e) {
+                if (!$dropdownMenu.contains(e.target) && !$dropdownToggle.contains(e.target)) {
+                    $dropdownMenu.classList.remove('show');
+                }
+            });
+        });
+    </script>
+
     @livewireScripts()
     @stack('scripts')
 </body>

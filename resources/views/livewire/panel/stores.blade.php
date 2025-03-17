@@ -70,11 +70,14 @@
                                         data-mdb-img="{{ $store->commercial_image_table }}" width="30"
                                         height="30">
                                     <img src="{{ asset('panel/images/image.png') }}"
-                                        data-mdb-img="{{ $store->tax_image_table }}" width="30" height="30">
+                                        data-mdb-img="{{ $store->tax_image_table }}" width="30" height="30"
+                                        style="display: none;">
                                     <img src="{{ asset('panel/images/image.png') }}"
-                                        data-mdb-img="{{ $store->invoice_image_table }}" width="30" height="30">
+                                        data-mdb-img="{{ $store->invoice_image_table }}" width="30" height="30"
+                                        style="display: none;">
                                     <img src="{{ asset('panel/images/image.png') }}"
-                                        data-mdb-img="{{ $store->logo_image_table }}" width="30" height="30">
+                                        data-mdb-img="{{ $store->logo_image_table }}" width="30" height="30"
+                                        style="display: none;">
                                 </div>
                             </td>
                             <x-actions :delete="true" edit="edit_store" :show="false" :link="'#'"
@@ -84,7 +87,7 @@
                     @empty
 
                         <tr>
-                            <td colspan="8" class="fw-bold fs-6">لا يوجد نتائج !!</td>
+                            <td colspan="9" class="fw-bold fs-6">لا يوجد نتائج !!</td>
                         </tr>
                     @endforelse
 
@@ -361,6 +364,16 @@
 
             $previousCreator.hide();
             $nextCreator.show();
+
+            $('.tab-1').on('click', function() {
+                $previousCreator.hide();
+                $nextCreator.show();
+            });
+
+            $('.tab-2').on('click', function() {
+                $previousCreator.show();
+                $nextCreator.hide();
+            });
 
             $nextCreator.on('click', function() {
                 $('.tab-1').removeClass('active');

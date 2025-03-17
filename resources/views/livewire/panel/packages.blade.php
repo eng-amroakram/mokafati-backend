@@ -71,7 +71,7 @@
                     @empty
 
                         <tr>
-                            <td colspan="9" class=" fs-6">لا يوجد نتائج !!</td>
+                            <td colspan="10" class=" fs-6">لا يوجد نتائج !!</td>
                         </tr>
                     @endforelse
 

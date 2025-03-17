@@ -54,7 +54,7 @@
                     @empty
 
                         <tr>
-                            <td colspan="8" class="fw-bold fs-6">لا يوجد نتائج !!</td>
+                            <td colspan="6" class="fw-bold fs-6">لا يوجد نتائج !!</td>
                         </tr>
                     @endforelse
 

@@ -75,6 +75,12 @@ class Stores extends Component
     public function openModal($id)
     {
         $store = Store::where('id', $id)->first();
+        $owner = $store->owner;
+
+        $this->owner_name = $owner->name;
+        $this->owner_email = $owner->email;
+        $this->owner_phone = $owner->phone;
+
         $this->model_id = $id;
         $this->name = $store->name;
         $this->owner_id = $store->owner_id;
@@ -141,13 +147,22 @@ class Stores extends Component
             "commercial_registration" => $this->commercial_registration,
             "tax_number" => $this->tax_number,
             "type" => $this->type,
-            "invoice" => $this->invoice,
+
+            'invoice' => $this->invoice,
+            'commercial_image' => $this->commercial_image,
+            'tax_image' => $this->tax_image,
+            'logo' => $this->logo
         ];
+
 
         $rules = $service->rules($this->model_id);
         $messages = $service->messages();
         $validator = Validator::make($data, $rules, $messages);
         $errors = array_map(fn($value) => $value[0], $validator->errors()->toArray());
+
+        if (!$this->validateTaxNumber($this->invoice, $this->tax_number)) {
+            $errors['tax_number'] = 'الرقم الضريبي المدخل لا يتطابق مع الفاتورة';
+        }
 
         if (count($errors)) {
             $this->dispatch('create-errors', $errors);
