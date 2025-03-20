@@ -13,6 +13,7 @@ use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
 Route::get('/', function () {
+    #Entry Point
     return redirect()->route('admin.panel.index');
 });
 
@@ -58,18 +59,3 @@ Route::get('test', function () {
 
     dd(trim($process->getOutput()));
 });
-
-
-
-// الفاتورة
-// تمتلك البيانات التالية:
-
-// الرقم الضريبي
-// اسم المتجر
-// مبلغ الشراء
-// وتاريخ الشراء
-// ومبلغ الضريبة
-
-
-// تطابق الفاتورة مع المتجر
-// يجب ان يكون المتجر لديه عروض متاحة

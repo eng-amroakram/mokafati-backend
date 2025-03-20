@@ -7,7 +7,7 @@ use Symfony\Component\Process\Process;
 
 trait QRValidationTaxNumber
 {
-    public function validateTaxNumber($invoiceImage = null, $taxNumber)
+    public function validateTaxNumber($invoiceImage, $taxNumber)
     {
         $base64Invoice = $this->getBase64FromImage($invoiceImage);
         $decodedData = $this->decodeTLV($base64Invoice);
@@ -19,7 +19,7 @@ trait QRValidationTaxNumber
         return false;
     }
 
-    private function getBase64FromImage($invoiceImage = null)
+    private function getBase64FromImage($invoiceImage)
     {
         if ($invoiceImage) {
 
