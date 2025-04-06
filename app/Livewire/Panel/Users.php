@@ -180,4 +180,15 @@ class Users extends Component
     {
         $this->reset();
     }
+
+    public function status($id)
+    {
+        $service = $this->setService();
+        $result = $service->changeStatus($id);
+        if ($result) {
+            $this->alertMessage('تم التحديث بنجاح');
+        } else {
+            $this->alertMessage('حدث خطأ، يرجى المحاولة مرة اخرى', 'error');
+        }
+    }
 }

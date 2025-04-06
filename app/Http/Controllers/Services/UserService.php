@@ -30,9 +30,9 @@ class UserService extends Controller
             ->paginate($paginate);
     }
 
-    public function changeAccountStatus($id)
+    public function changeStatus($id)
     {
-        return User::changeAccountStatus($id);
+        return User::changeStatus($id);
     }
 
     public function delete($id)

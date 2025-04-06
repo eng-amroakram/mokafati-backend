@@ -33,6 +33,7 @@
                         <th data-mdb-sort="false" class="th-sm">الايميل</th>
                         <th data-mdb-sort="false" class="th-sm">رقم الهاتف</th>
                         <th data-mdb-sort="false" class="th-sm">النوع</th>
+                        <th data-mdb-sort="false" class="th-sm">حالة المستخدم</th>
                         <th data-mdb-sort="false" class="th-sm">التحكم</th>
                     </tr>
                 </thead>
@@ -46,6 +47,24 @@
                             <td>
                                 <span
                                     class='{{ badge(optional($user->roles->first())->name ?? '') }}'>{{ ucwords(str_replace('_', ' ', optional($user->roles->first())->name ?? '')) }}</span>
+                            </td>
+                            <td>
+                                @if (!$user->email_verified_at)
+                                    <span class='badge badge-danger'>لم يتم التحقق
+                                        من البريد الالكتروني</span>
+                                @else
+                                    <div class="switch">
+                                        <label>
+                                            نشط
+                                            <input type="checkbox" wire:click="status({{ $user->id }})"
+                                                {{ $user->status == 'active' ? 'checked' : '' }}
+                                                {{ $user->status == 1 ? 'checked' : '' }}>
+                                            <span class="lever"></span>
+                                            غير نشط
+                                        </label>
+                                    </div>
+                                @endif
+
                             </td>
                             <x-actions delete="delete_user" edit="edit_user" :show="false" :link="'#'"
                                 :id="$user->id"></x-actions>

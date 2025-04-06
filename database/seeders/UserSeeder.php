@@ -21,6 +21,7 @@ class UserSeeder extends Seeder
             'phone' => '0599916671',
             'username' => 'admin',
             'status' => 'active',
+            'email_verified_at' => now(),
             'address' => 'Palestine/Gaza',
         ]);
         $store = User::create([
@@ -30,6 +31,7 @@ class UserSeeder extends Seeder
             'phone' => '0599916672',
             'username' => 'store',
             'status' => 'active',
+            'email_verified_at' => now(),
             'address' => 'Palestine/Gaza',
         ]);
         $user = User::create([
@@ -39,6 +41,7 @@ class UserSeeder extends Seeder
             'phone' => '0599916674',
             'username' => 'user',
             'status' => 'active',
+            'email_verified_at' => now(),
             'address' => 'Palestine/Gaza',
         ]);
 

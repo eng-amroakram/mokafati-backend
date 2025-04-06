@@ -23,10 +23,10 @@ trait ModelHelper
     {
         $model = $builder->find($id);
         if ($model) {
-            $model->update([
+            $result = $model->update([
                 'status' => $model->status == 'active' ? 'inactive' : 'active'
             ]);
-            return __("Update Status Successfully");
+            return $result;
         }
 
         return false;
