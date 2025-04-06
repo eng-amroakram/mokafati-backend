@@ -142,4 +142,26 @@ class AuthController extends Controller
 
         return response()->json(["message" => "تم إعادة تعيين كلمة المرور بنجاح!"], 200);
     }
+
+    public function resendOtp(Request $request)
+    {
+        // التحقق من البريد الإلكتروني
+        $data = $request->validate([
+            'email' => 'required|email|exists:users,email',
+        ]);
+
+        // جلب المستخدم بناءً على البريد الإلكتروني
+        $user = User::where('email', $data['email'])->first();
+
+        // توليد كود OTP جديد
+        $otp = rand(100000, 999999);
+
+        // تحديث المستخدم بحفظ الكود الجديد
+        $user->update(['otp_code' => $otp]);
+
+        // إرسال الكود عبر البريد الإلكتروني
+        Mail::to($user->email)->send(new VerifyEmail($otp));
+
+        return response()->json(["message" => "تم إرسال كود التحقق مجددًا إلى بريدك الإلكتروني."], 200);
+    }
 }

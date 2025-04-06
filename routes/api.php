@@ -16,6 +16,7 @@ Route::prefix('panel/')->group(function () {
             Route::post('verify-email', 'verifyEmail');
             Route::post('forgot-password', 'forgotPassword');
             Route::post('reset-password', 'resetPassword');
+            Route::post('/resend-otp', 'resendOtp');
         });
     // Route::middleware(['api', 'auth:sanctum'])
     //     ->group(function () {});
